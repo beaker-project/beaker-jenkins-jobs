@@ -1,0 +1,51 @@
+- job:
+    name: beaker-rpms
+    description: "Beaker RPMs for https://beaker-project.org/nightlies/"
+    scm:
+        - git:
+            url: git://git.beaker-project.org/beaker
+            branches:
+                - origin/develop
+                - origin/release-*
+            clean: true
+            wipe-workspace: false
+            skip-tag: true
+            use-author: true
+            recursive-submodules: true
+    triggers:
+        - pollscm: "H/5 * * * *"
+    builders:
+        - shell: |
+            Misc/rpmbuild.sh -bs
+            mkdir -p mock-result
+            /usr/bin/mock --resultdir=mock-result -r beaker-fedora-19-x86_64 --clean --rebuild rpmbuild-output/*.src.rpm
+            /usr/bin/mock --resultdir=mock-result -r eng-rhel-6-x86_64 --clean --rebuild rpmbuild-output/*.src.rpm
+            /usr/bin/mock --resultdir=mock-result -r eng-rhel-7-x86_64 --clean --rebuild rpmbuild-output/*.src.rpm
+        - shell: |
+            # GIT_BRANCH is actually remote/branch, e.g. origin/develop
+            # so we export GIT_BRANCH_NAME as just the branch name, develop
+            # This is used by the publishing steps below
+            echo "GIT_BRANCH_NAME=${GIT_BRANCH#*/}" >env.properties
+        - inject:
+            properties-file: env.properties
+    publishers:
+        - archive:
+            artifacts: mock-result/*.rpm
+        - ssh:
+            site: "beaker-project.org nightlies"
+            source: mock-result/*.el6eng*.rpm
+            remove-prefix: mock-result/
+            target: "${GIT_BRANCH_NAME}/RedHatEnterpriseLinux6/"
+            command: "createrepo --update --no-database /srv/www/nightlies/${GIT_BRANCH_NAME}/RedHatEnterpriseLinux6/"
+        - ssh:
+            site: "beaker-project.org nightlies"
+            source: mock-result/*.el7eng*.rpm
+            remove-prefix: mock-result/
+            target: "${GIT_BRANCH_NAME}/RedHatEnterpriseLinux7/"
+            command: "createrepo --update --no-database /srv/www/nightlies/${GIT_BRANCH_NAME}/RedHatEnterpriseLinux7/"
+        - ssh:
+            site: "beaker-project.org nightlies"
+            source: mock-result/*.fc19*.rpm
+            remove-prefix: mock-result/
+            target: "${GIT_BRANCH_NAME}/Fedora19/"
+            command: "createrepo --update --no-database /srv/www/nightlies/${GIT_BRANCH_NAME}/Fedora19/"

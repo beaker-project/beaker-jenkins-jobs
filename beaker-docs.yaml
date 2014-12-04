@@ -1,0 +1,80 @@
+- job-template:
+    name: beaker-docs-{branch}
+    description: "Beaker docs for {branch} branch"
+    scm:
+        - git:
+            url: git://git.beaker-project.org/beaker-project.org
+            branches:
+                - origin/master
+            basedir: beaker-project.org
+            clean: true
+            wipe-workspace: false
+            skip-tag: true
+            included-regions:
+                - "sphinx-theme/.*"
+            sparse-checkout:
+                - "sphinx-theme"
+            reference-repo: /var/lib/jenkins/jobs/beaker-project.org/workspace/beaker-project.org
+        - git:
+            url: git://git.beaker-project.org/beaker
+            branches:
+                - origin/{branch}
+            basedir: beaker
+            clean: true
+            wipe-workspace: false
+            skip-tag: true
+            reference-repo: /var/lib/jenkins/jobs/beaker-rpms/workspace
+    triggers:
+        - pollscm: "H/5 * * * *"
+    builders:
+        - shell: |
+            cd beaker/
+
+            case "{branch}" in
+                master)
+                    branch_warning=""
+                    ;;
+                develop)
+                    branch_warning="You are viewing the development version of Beaker’s documentation. It is not final and may be changed before the next release."
+                    ;;
+                *)
+                    branch_warning="You are viewing a branched version of Beaker’s documentation. The latest released version of the documentation contains more up-to-date information."
+                    ;;
+            esac
+
+            # Only for old branches
+            make -C Common bkr/__init__.py bkr/common/__init__.py
+
+            # In Sphinx 1.3 this can become -D html_theme_path=...
+            echo "html_theme_path = ['../../beaker-project.org/sphinx-theme']" >>documentation/conf.py
+
+            PYTHONPATH=Common:Server:Client/src python -c '__requires__ = ["Sphinx >= 1.0", "CherryPy < 3.0"]; import pkg_resources; execfile("/usr/bin/sphinx-build")' \
+                -b html -D html_theme=beaker -A branch_warning="$branch_warning" documentation documentation/_build/html
+            rm -r documentation/_build/html/.doctrees
+
+        - shell: |
+            cd beaker/
+            destdir=docs
+            if [[ "{branch}" != master ]] ; then destdir="docs-{branch}" ; fi
+            rsync -v -e 'ssh -i /var/lib/jenkins/.ssh/id_rsa' --rsync-path 'flock /srv/www/beaker-project.org/htdocs/ rsync' -a --delete-after documentation/_build/html/ "jenkins@beaker-project.org:/srv/www/beaker-project.org/htdocs/$destdir/"
+            ssh -i /var/lib/jenkins/.ssh/id_rsa jenkins@beaker-project.org /srv/www/beaker-project.org/published.sh "Automatic\ commit\ by\ Jenkins\ job\ ${{JOB_NAME}}\ \#${{BUILD_NUMBER}}"
+    publishers:
+        - archive:
+            artifacts: beaker/documentation/_build/html/**
+
+- project:
+    name: beaker-docs
+    branch:
+        - master
+        - develop
+        - release-0.11
+        - release-0.12
+        - release-0.13
+        - release-0.14
+        - release-0.15
+        - release-0.16
+        - release-0.17
+        - release-0.18
+        - release-19
+    jobs:
+        - "beaker-docs-{branch}"
