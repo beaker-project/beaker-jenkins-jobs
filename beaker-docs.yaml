@@ -29,7 +29,7 @@
     wrappers:
         - exclusion:
             resources:
-                htdocs
+                - htdocs
     builders:
         - shell: |
             cd beaker/
