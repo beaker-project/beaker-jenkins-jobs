@@ -1,6 +1,10 @@
 - job:
     name: beaker-rpms
     description: "Beaker RPMs for https://beaker-project.org/nightlies/"
+    logrotate:
+        # We don't need to keep many builds archived here in Jenkins,
+        # since RPMs are published to beaker-project.org.
+        numToKeep: 10
     scm:
         - git:
             url: git://git.beaker-project.org/beaker

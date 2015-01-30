@@ -1,6 +1,11 @@
 - job-template:
     name: beaker-docs-{branch}
     description: "Beaker docs for {branch} branch"
+    logrotate:
+        # We don't need to keep built docs in Jenkins permanently since all
+        # changes to the web site are tracked in git on beaker-project.org,
+        # including every docs build that is published.
+        numToKeep: 30
     scm:
         - git:
             url: git://git.beaker-project.org/beaker-project.org
