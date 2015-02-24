@@ -25,6 +25,10 @@
             skip-tag: true
     triggers:
         - pollscm: "H/5 * * * *"
+    wrappers:
+        - exclusion:
+            resources:
+                - htdocs
     builders:
         - shell: |
             cd beaker-dev-docs/
@@ -35,10 +39,12 @@
             sphinx-build -W -b html -D html_theme=beaker . _build/html
             rm -r _build/html/.doctrees
 
+        - critical-block-start
         - shell: |
             cd beaker-dev-docs/
-            rsync -v -e 'ssh -i /var/lib/jenkins/.ssh/id_rsa' --rsync-path 'flock /srv/www/beaker-project.org/htdocs/ rsync' -a --delete-after _build/html/ jenkins@beaker-project.org:/srv/www/beaker-project.org/htdocs/dev/
+            rsync -v -e 'ssh -i /var/lib/jenkins/.ssh/id_rsa' -a --delete-after _build/html/ jenkins@beaker-project.org:/srv/www/beaker-project.org/htdocs/dev/
             ssh -i /var/lib/jenkins/.ssh/id_rsa jenkins@beaker-project.org /srv/www/beaker-project.org/published.sh "Automatic\ commit\ by\ Jenkins\ job\ ${JOB_NAME}\ \#${BUILD_NUMBER}"
+        - critical-block-end
     publishers:
         - archive:
             artifacts: beaker-dev-docs/_build/html/**
