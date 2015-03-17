@@ -24,7 +24,7 @@
             mkdir -p mock-result
             /usr/bin/mock --resultdir=mock-result -r beaker-fedora-19-x86_64 --clean --rebuild rpmbuild-output/*.src.rpm
             /usr/bin/mock --resultdir=mock-result -r eng-rhel-6-x86_64 --clean --rebuild rpmbuild-output/*.src.rpm
-            /usr/bin/mock --resultdir=mock-result -r eng-rhel-7-x86_64 --clean --rebuild rpmbuild-output/*.src.rpm
+            /usr/bin/mock --resultdir=mock-result -r sed-rhel-7-x86_64 --clean --rebuild rpmbuild-output/*.src.rpm
         - shell: |
             # GIT_BRANCH is actually remote/branch, e.g. origin/develop
             # so we export GIT_BRANCH_NAME as just the branch name, develop
@@ -43,7 +43,7 @@
             command: "createrepo --update --no-database /srv/www/nightlies/${GIT_BRANCH_NAME}/RedHatEnterpriseLinux6/"
         - ssh:
             site: "beaker-project.org nightlies"
-            source: mock-result/*.el7eng*.rpm
+            source: mock-result/*.el7sed*.rpm
             remove-prefix: mock-result/
             target: "${GIT_BRANCH_NAME}/RedHatEnterpriseLinux7/"
             command: "createrepo --update --no-database /srv/www/nightlies/${GIT_BRANCH_NAME}/RedHatEnterpriseLinux7/"
