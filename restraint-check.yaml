@@ -1,0 +1,16 @@
+- job:
+    name: restraint-check
+    description: "Restraint unit tests"
+    scm:
+        - git:
+            url: git://git.beaker-project.org/restraint
+            branches:
+                - origin/master
+            clean: true
+            wipe-workspace: false
+            skip-tag: true
+    triggers:
+        - pollscm: "H/5 * * * *"
+    builders:
+        - shell: |
+            make check
