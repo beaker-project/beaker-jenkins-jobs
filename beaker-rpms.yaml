@@ -20,7 +20,11 @@
         - pollscm: "H/5 * * * *"
     builders:
         - shell: |
-            Misc/rpmbuild.sh -bs
+            if [[ "$GIT_BRANCH" == "origin/develop" ]] ; then
+                Misc/rpmbuild.sh --next-major -bs
+            else
+                Misc/rpmbuild.sh -bs
+            fi
             mkdir -p mock-result
             /usr/bin/mock --resultdir=mock-result -r beaker-fedora-19-x86_64 --clean --rebuild rpmbuild-output/*.src.rpm
             /usr/bin/mock --resultdir=mock-result -r eng-rhel-6-x86_64 --clean --rebuild rpmbuild-output/*.src.rpm
