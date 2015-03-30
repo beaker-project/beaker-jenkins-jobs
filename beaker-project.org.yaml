@@ -34,6 +34,6 @@
         - critical-block-start
         - shell: |
             cd beaker-project.org/
-            rsync -v -e 'ssh -i /var/lib/jenkins/.ssh/id_rsa' -a --delete-after --exclude=.git\* --exclude=dev --exclude=docs --exclude=docs-\* ./ jenkins@beaker-project.org:/srv/www/beaker-project.org/htdocs/
+            rsync -v -e 'ssh -i /var/lib/jenkins/.ssh/id_rsa' -r -l --checksum --delete-after --exclude=.git\* --exclude=dev --exclude=docs --exclude=docs-\* ./ jenkins@beaker-project.org:/srv/www/beaker-project.org/htdocs/
             ssh -i /var/lib/jenkins/.ssh/id_rsa jenkins@beaker-project.org /srv/www/beaker-project.org/published.sh "Automatic\ commit\ by\ Jenkins\ job\ ${JOB_NAME}\ \#${BUILD_NUMBER}"
         - critical-block-end
