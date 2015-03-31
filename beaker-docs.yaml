@@ -66,7 +66,7 @@
             cd beaker/
             destdir=docs
             if [[ "{branch}" != master ]] ; then destdir="docs-{branch}" ; fi
-            rsync -v -e 'ssh -i /var/lib/jenkins/.ssh/id_rsa' -r -l checksum --delete-after documentation/_build/html/ "jenkins@beaker-project.org:/srv/www/beaker-project.org/htdocs/$destdir/"
+            rsync -v -e 'ssh -i /var/lib/jenkins/.ssh/id_rsa' -r -l --checksum --delete-after documentation/_build/html/ "jenkins@beaker-project.org:/srv/www/beaker-project.org/htdocs/$destdir/"
             ssh -i /var/lib/jenkins/.ssh/id_rsa jenkins@beaker-project.org /srv/www/beaker-project.org/published.sh "Automatic\ commit\ by\ Jenkins\ job\ ${{JOB_NAME}}\ \#${{BUILD_NUMBER}}"
         - critical-block-end
     publishers:
