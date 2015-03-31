@@ -1,6 +1,10 @@
 - job:
     name: beaker-dev-docs
-    description: "Beaker dev docs"
+    description: |
+        Builds the HTML developer docs from
+        https://git.beaker-project.org/cgit/beaker-dev-docs/
+        with the beaker-project.org Sphinx theme applied, and publishes them under
+        https://beaker-project.org/dev/.
     scm:
         - git:
             url: git://git.beaker-project.org/beaker-project.org

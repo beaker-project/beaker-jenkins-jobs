@@ -1,6 +1,7 @@
 - job:
     name: restraint-review-checks
-    description: "Restraint checks for patches under review"
+    description: |
+        Performs pre-merge checks for Restraint patches under review.
     logrotate:
         numToKeep: 30
     concurrent: true

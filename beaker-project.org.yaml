@@ -1,6 +1,10 @@
 - job:
     name: beaker-project.org
-    description: "Beaker web site and yum repos (excluding Sphinx docs)"
+    description: |
+        Builds all non-Sphinx web site content from 
+        https://git.beaker-project.org/cgit/beaker-project.org/
+        (some static files, release tarballs, yum repos, and Beaker-in-a-box) 
+        and publishes it to https://beaker-project.org/.
     scm:
         - git:
             url: git://git.beaker-project.org/beaker-project.org
