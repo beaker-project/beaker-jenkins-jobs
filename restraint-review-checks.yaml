@@ -44,6 +44,7 @@
     builders:
         - shell: |
             make
+            make check | tee check.log
         - shell: |
             rm -f *.src.rpm
             tito build --test --srpm --output .
@@ -65,5 +66,5 @@
     wrappers:
         - publish-over-ssh-post-build:
             site: "beaker-project.org jenkins-results"
-            source: "koji-logs/**"
+            source: "check.log koji-logs/**"
             target: "${JOB_NAME}/${BUILD_NUMBER}"
