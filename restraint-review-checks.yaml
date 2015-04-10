@@ -62,8 +62,8 @@
             mkdir -p koji-logs
             koji -p beakerkoji download-logs -r -d koji-logs ${taskids[@]}
             exit $rc
-    publishers:
-        - ssh:
+    wrappers:
+        - publish-over-ssh-post-build:
             site: "beaker-project.org jenkins-results"
             source: "koji-logs/**"
             target: "${JOB_NAME}/${BUILD_NUMBER}"
