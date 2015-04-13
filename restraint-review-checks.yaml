@@ -46,6 +46,7 @@
         - shell: |
             make
             make check | tee check.log
+            make -C src valgrind 2>&1 | tee valgrind.log
         - shell: |
             rm -f *.src.rpm
             tito build --test --srpm --output .
