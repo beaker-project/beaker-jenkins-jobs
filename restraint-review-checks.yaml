@@ -4,7 +4,8 @@
         Performs pre-merge checks for Restraint patches under review.
     logrotate:
         numToKeep: 30
-    concurrent: true
+    # no concurrent builds because the tests start daemons listening on fixed ports
+    concurrent: false
     scm:
         - git:
             url: ssh://jenkins@gerrit.beaker-project.org:29418/restraint
