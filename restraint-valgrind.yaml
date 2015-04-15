@@ -13,4 +13,4 @@
         - pollscm: "H/5 * * * *"
     builders:
         - shell: |
-            make valgrind
+            make -C src valgrind
