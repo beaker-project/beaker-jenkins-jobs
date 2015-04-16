@@ -68,5 +68,5 @@
     wrappers:
         - publish-over-ssh-post-build:
             site: "beaker-project.org jenkins-results"
-            source: "check.log koji-logs/**"
+            source: "check.log valgrind.log koji-logs/**"
             target: "${JOB_NAME}/${BUILD_NUMBER}"
