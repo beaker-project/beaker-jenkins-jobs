@@ -96,5 +96,6 @@
         - release-0.17
         - release-0.18
         - release-19
+        - release-20
     jobs:
         - "beaker-docs-{branch}"
