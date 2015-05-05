@@ -5,6 +5,7 @@
         https://git.beaker-project.org/cgit/beaker-project.org/
         (some static files, release tarballs, yum repos, and Beaker-in-a-box) 
         and publishes it to https://beaker-project.org/.
+    auth-token: !include beaker-project.org-auth-token.txt
     scm:
         - git:
             url: git://git.beaker-project.org/beaker-project.org
