@@ -1,0 +1,32 @@
+- job:
+    name: lshw-tests
+    description: "lshw tests"
+    scm:
+        - git:
+            url: git://git.beaker-project.org/lshw
+            branches:
+                - origin/master
+            basedir: lshw
+            clean: true
+            wipe-workspace: false
+            skip-tag: true
+        - git:
+            url: https://github.com/beaker-project/lshw-tests.git
+            branches:
+                - origin/beaker
+            basedir: lshw-tests
+            clean: true
+            wipe-workspace: false
+            skip-tag: true
+
+    triggers:
+        - pollscm: "H/5 * * * *"
+
+    builders:
+        - shell: |
+            cd lshw
+            make DATADIR=$(realpath src)
+        - shell: |
+            cd lshw-tests
+            make
+            LSHW=../lshw/src/lshw ./run-tests.sh
