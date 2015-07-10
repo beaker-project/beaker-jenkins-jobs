@@ -45,6 +45,7 @@
     builders:
         - shell: |
             make
+            unset http_proxy
             make check | tee check.log
             make -C src valgrind 2>&1 | tee valgrind.log
         - shell: |
