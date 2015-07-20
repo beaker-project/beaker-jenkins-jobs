@@ -52,7 +52,7 @@
             rm -f *.src.rpm
             tito build --test --srpm --output .
             taskids=()
-            for tag in beaker-harness-fedora-{22,21,20} beaker-harness-rhel-{7,6,5,4} ; do
+            for tag in beaker-harness-fedora-{23,22,21} beaker-harness-rhel-{7,6,5,4} ; do
                 output=$(koji -p beakerkoji build --nowait --scratch --arch-override=x86_64 $tag *.src.rpm)
                 if [[ $? -ne 0 ]] ; then
                     echo "$output" >&2
