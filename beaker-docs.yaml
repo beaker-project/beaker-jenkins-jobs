@@ -27,7 +27,8 @@
             included-regions:
                 - "sphinx-theme/.*"
             sparse-checkout:
-                - "sphinx-theme"
+                paths:
+                    - "sphinx-theme"
             reference-repo: /var/lib/jenkins/jobs/beaker-project.org/workspace/beaker-project.org
         - git:
             url: git://git.beaker-project.org/beaker
