@@ -13,4 +13,5 @@
         - pollscm: "H/5 * * * *"
     builders:
         - shell: |
+            unset http_proxy
             make -C src valgrind
