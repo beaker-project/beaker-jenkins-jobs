@@ -15,3 +15,5 @@
         - shell: |
             unset http_proxy
             make check
+    publishers:
+        - report-failures

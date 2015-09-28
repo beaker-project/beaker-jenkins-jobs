@@ -51,5 +51,6 @@
             ssh -i /var/lib/jenkins/.ssh/id_rsa jenkins@beaker-project.org /srv/www/beaker-project.org/published.sh "Automatic\ commit\ by\ Jenkins\ job\ ${JOB_NAME}\ \#${BUILD_NUMBER}"
         - critical-block-end
     publishers:
+        - report-failures
         - archive:
             artifacts: beaker-dev-docs/_build/html/**

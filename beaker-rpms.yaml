@@ -41,6 +41,7 @@
         - inject:
             properties-file: env.properties
     publishers:
+        - report-failures
         - archive:
             artifacts: mock-result/*.rpm
         - ssh:

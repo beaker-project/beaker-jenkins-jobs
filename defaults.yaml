@@ -1,0 +1,5 @@
+- publisher:
+    name: report-failures
+    publishers:
+        - email:
+            recipients: developers@beaker-project.org
