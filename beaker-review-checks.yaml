@@ -52,9 +52,16 @@
     builders:
         - shell: |
             if [[ "$GIT_BRANCH" == "origin/develop" ]] ; then
+                Misc/rpmbuild.sh --next-major -bs
                 Misc/rpmbuild.sh --next-major -bb
             else
+                Misc/rpmbuild.sh -bs
                 Misc/rpmbuild.sh -bb
+            fi
+
+        - shell: |
+            if [ -f Misc/rpmlint-config.py ] ; then # since Beaker 22
+                rpmlint -f Misc/rpmlint-config.py -o "NetworkEnabled False" rpmbuild-output/*.rpm rpmbuild-output/*/*.rpm
             fi
 
         - shell: |
