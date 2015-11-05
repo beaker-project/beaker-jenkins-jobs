@@ -138,6 +138,7 @@
             bkr job-results --prettyxml $jobid | \
                 sed -e 's@[-a-zA-Z0-9.]*\.redhat\.com@CENSORED.redhat.com@g' \
                 >beaker/$jobid/results.xml
+            bkr job-results --format=junit-xml $jobid >beaker/$jobid/junit.xml
             bkr job-logs $jobid | grep -v debug | \
             while read url ; do
                 # turn a URL like http://.../1234/TESTOUT.log into 1234-TESTOUT.log
@@ -149,6 +150,10 @@
             if [[ "$jobresult" != "Completed/Pass" ]] ; then
                 exit 1
             fi
+
+    publishers:
+        - junit:
+            results: beaker/*/junit.xml
 
     wrappers:
         - publish-over-ssh-post-build:
