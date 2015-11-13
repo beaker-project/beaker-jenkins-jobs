@@ -74,7 +74,7 @@
             job_submit_output=$(bkr job-submit - <<EOF
             <job group="beakerdevs" retention_tag="scratch">
                 <whiteboard>
-                    beaker dogfood for Gerrit change ${GERRIT_CHANGE_NUMBER} patch ${GERRIT_PATCHSET_NUMBER}: ${GERRIT_CHANGE_SUBJECT}
+                    beaker dogfood for Gerrit change ${GERRIT_CHANGE_NUMBER} patch ${GERRIT_PATCHSET_NUMBER}: $(xmlstarlet esc "${GERRIT_CHANGE_SUBJECT}")
                 </whiteboard>
                 <recipeSet priority="Low">
                     <recipe ks_meta="method=http selinux=disabled" whiteboard="Nose Tests">
