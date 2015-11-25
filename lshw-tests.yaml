@@ -1,6 +1,9 @@
 - job:
     name: lshw-tests
-    description: "lshw tests"
+    description: |
+        Regression test cases for Beaker's lshw fork, using LD_PRELOAD trickery 
+        to ensure that the XML output on various different systems matches the 
+        expected output.
     scm:
         - git:
             url: git://git.beaker-project.org/lshw
