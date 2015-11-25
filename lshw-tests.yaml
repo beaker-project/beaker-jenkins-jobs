@@ -25,7 +25,7 @@
     builders:
         - shell: |
             cd lshw
-            make DATADIR=$(realpath src)
+            make DATADIR=$(readlink -f src)
         - shell: |
             cd lshw-tests
             make
