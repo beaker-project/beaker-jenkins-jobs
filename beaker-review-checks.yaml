@@ -123,6 +123,7 @@
                                 <param name="RHTS_OPTION_COMPAT_SERVICE" value=""/>
                                 <param name="BEAKER_SKIP_INIT_DB" value=""/>
                                 <param name="SOURCE" value="_git"/>
+                                <param name="PACKAGES_TO_TEST" value="bkr.inttest bkr.redhat"/>
                             </params>
                         </task>
                     </recipe>
