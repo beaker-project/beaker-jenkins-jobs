@@ -159,5 +159,5 @@
     wrappers:
         - publish-over-ssh-post-build:
             site: "beaker-project.org jenkins-results"
-            source: "rpmbuild-output/** documentation/_build/html/** beaker/**"
+            source: "beaker/**"
             target: "${JOB_NAME}/${BUILD_NUMBER}"
