@@ -52,6 +52,8 @@
 - project:
     name: beaker-rpms
     distro:
+        - Fedorarawhide:
+            mockconfig: fedora-rawhide-x86_64
         - Fedora23:
             mockconfig: fedora-23-x86_64
         - Fedora22:
