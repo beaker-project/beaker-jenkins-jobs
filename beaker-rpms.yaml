@@ -41,7 +41,7 @@
     publishers:
         - report-failures
         - archive:
-            artifacts: mock-result/*.rpm
+            artifacts: mock-result/*
         - ssh:
             site: "beaker-project.org nightlies"
             source: mock-result/*.rpm
