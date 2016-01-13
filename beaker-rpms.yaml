@@ -1,5 +1,5 @@
-- job:
-    name: beaker-rpms
+- job-template:
+    name: beaker-rpms-{distro}
     description: |
         Builds RPMs for the develop and release-* branches on every commit. 
         Results are published to the yum repos at 
@@ -30,14 +30,12 @@
                 Misc/rpmbuild.sh -bs
             fi
             mkdir -p mock-result
-            /usr/bin/mock --resultdir=mock-result -r beaker-fedora-21-x86_64 --clean --rebuild rpmbuild-output/*.src.rpm
-            /usr/bin/mock --resultdir=mock-result -r eng-rhel-6-x86_64 --clean --rebuild rpmbuild-output/*.src.rpm
-            /usr/bin/mock --resultdir=mock-result -r sed-rhel-7-x86_64 --clean --rebuild rpmbuild-output/*.src.rpm
+            /usr/bin/mock --resultdir=mock-result -r {mockconfig} --clean --rebuild rpmbuild-output/*.src.rpm
         - shell: |
             # GIT_BRANCH is actually remote/branch, e.g. origin/develop
             # so we export GIT_BRANCH_NAME as just the branch name, develop
             # This is used by the publishing steps below
-            echo "GIT_BRANCH_NAME=${GIT_BRANCH#*/}" >env.properties
+            echo "GIT_BRANCH_NAME=${{GIT_BRANCH#*/}}" >env.properties
         - inject:
             properties-file: env.properties
     publishers:
@@ -46,19 +44,21 @@
             artifacts: mock-result/*.rpm
         - ssh:
             site: "beaker-project.org nightlies"
-            source: mock-result/*.el6eng*.rpm
+            source: mock-result/*.rpm
             remove-prefix: mock-result/
-            target: "${GIT_BRANCH_NAME}/RedHatEnterpriseLinux6/"
-            command: "createrepo --update --no-database /srv/www/nightlies/${GIT_BRANCH_NAME}/RedHatEnterpriseLinux6/"
-        - ssh:
-            site: "beaker-project.org nightlies"
-            source: mock-result/*.el7sed*.rpm
-            remove-prefix: mock-result/
-            target: "${GIT_BRANCH_NAME}/RedHatEnterpriseLinux7/"
-            command: "createrepo --update --no-database /srv/www/nightlies/${GIT_BRANCH_NAME}/RedHatEnterpriseLinux7/"
-        - ssh:
-            site: "beaker-project.org nightlies"
-            source: mock-result/*.fc21*.rpm
-            remove-prefix: mock-result/
-            target: "${GIT_BRANCH_NAME}/Fedora21/"
-            command: "createrepo --update --no-database /srv/www/nightlies/${GIT_BRANCH_NAME}/Fedora21/"
+            target: "${{GIT_BRANCH_NAME}}/{distro}/"
+            command: "createrepo --update --no-database /srv/www/nightlies/${{GIT_BRANCH_NAME}}/{distro}/"
+
+- project:
+    name: beaker-rpms
+    distro:
+        - Fedora23:
+            mockconfig: fedora-23-x86_64
+        - Fedora22:
+            mockconfig: fedora-22-x86_64
+        - RedHatEnterpriseLinux7:
+            mockconfig: sed-rhel-7-x86_64
+        - RedHatEnterpriseLinux6:
+            mockconfig: eng-rhel-6-x86_64
+    jobs:
+        - beaker-rpms-{distro}
