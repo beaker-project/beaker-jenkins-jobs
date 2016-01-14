@@ -38,7 +38,7 @@
             clean: true
             wipe-workspace: false
             skip-tag: true
-            reference-repo: /var/lib/jenkins/jobs/beaker-rpms/workspace
+            reference-repo: /var/lib/jenkins/jobs/beaker-rpms-RedHatEnterpriseLinux6/workspace
     triggers:
         - pollscm: "H/5 * * * *"
     wrappers:
