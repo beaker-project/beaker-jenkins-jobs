@@ -41,7 +41,7 @@
             # In Sphinx 1.3 this can become -D html_theme_path=...
             echo "html_theme_path = ['../beaker-project.org/sphinx-theme']" >>conf.py
 
-            sphinx-build -W -b html -D html_theme=beaker . _build/html
+            sphinx-1.0-build -W -b html -D html_theme=beaker . _build/html
             rm -r _build/html/.doctrees
 
         - critical-block-start

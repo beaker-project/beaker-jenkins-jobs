@@ -67,7 +67,7 @@
             # In Sphinx 1.3 this can become -D html_theme_path=...
             echo "html_theme_path = ['../../beaker-project.org/sphinx-theme']" >>documentation/conf.py
 
-            PYTHONPATH=Common:Server:Client/src python -c '__requires__ = ["Sphinx >= 1.0", "CherryPy < 3.0"]; import pkg_resources; execfile("/usr/bin/sphinx-build")' \
+            PYTHONPATH=Common:Server:Client/src python -c '__requires__ = ["Sphinx >= 1.0", "CherryPy < 3.0"]; import pkg_resources; execfile("/usr/bin/sphinx-1.0-build")' \
                 -b html -D html_theme=beaker -A branch_warning="$branch_warning" documentation documentation/_build/html
             rm -r documentation/_build/html/.doctrees
 
