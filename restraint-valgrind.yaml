@@ -1,6 +1,7 @@
 - job:
     name: restraint-valgrind
     description: "Restraint unit tests in Valgrind"
+    node: fedora
     scm:
         - git:
             url: git://git.beaker-project.org/restraint

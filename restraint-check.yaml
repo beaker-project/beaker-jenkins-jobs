@@ -1,6 +1,7 @@
 - job:
     name: restraint-check
     description: "Restraint unit tests"
+    node: fedora
     scm:
         - git:
             url: git://git.beaker-project.org/restraint
