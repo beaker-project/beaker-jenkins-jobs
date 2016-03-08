@@ -44,6 +44,9 @@
             custom-url: "https://beaker-project.org/jenkins-results/${JOB_NAME}/${BUILD_NUMBER}/"
     builders:
         - shell: |
+            # Hack to pull tarballs from dist-git, instead of from the internet
+            curl 'http://pkgs.devel.redhat.com/cgit/rpms/restraint/plain/sources?h=eng-rhel-6' | while read hash filename ; do curl -f -L -O http://pkgs.devel.redhat.com/repo/pkgs/restraint/$filename/$hash/$filename ; done
+        - shell: |
             make
             unset http_proxy
             make check | tee check.log
