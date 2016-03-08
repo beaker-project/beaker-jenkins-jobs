@@ -47,7 +47,7 @@
             source: mock-result/*.rpm
             remove-prefix: mock-result/
             target: "${{GIT_BRANCH_NAME}}/{distro}/"
-            command: "createrepo --update --no-database /srv/www/nightlies/${{GIT_BRANCH_NAME}}/{distro}/"
+            command: "createrepo_c --update --no-database /srv/www/nightlies/${{GIT_BRANCH_NAME}}/{distro}/"
 
 - project:
     name: beaker-rpms
