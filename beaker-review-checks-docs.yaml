@@ -1,0 +1,20 @@
+- job:
+    name: beaker-review-checks-docs
+    description: |
+        Builds Sphinx documentation for patches posted to Gerrit.
+    logrotate:
+        daysToKeep: 30
+    concurrent: true
+    scm: !include beaker-review-checks-scmconfig.yaml.inc
+    triggers: !include beaker-review-checks-triggerconfig.yaml.inc
+    builders:
+        - shell: |
+            make -C documentation html SPHINXOPTS="-W"
+    publishers:
+        - archive:
+            artifacts: documentation/_build/html/**
+    wrappers:
+        - publish-over-ssh-post-build:
+            site: "beaker-project.org jenkins-results"
+            source: "documentation/_build/html/**"
+            target: "$JOB_NAME/$BUILD_NUMBER"

@@ -1,76 +1,15 @@
 - job:
-    name: beaker-review-checks
+    name: beaker-review-checks-dogfood-RedHatEnterpriseLinux6
     description: |
-        Checks patches posted to Gerrit for review.
-        Patches are only checked after receiving a Ready-for-Checks+1 score 
-        (granted automatically to Beaker core developers' patches).
+        Runs Beaker's test suite inside Beaker, for patches posted to Gerrit.
     logrotate:
         daysToKeep: 30
     concurrent: true
-    scm:
-        - git:
-            browser: cgit
-            browser-url: https://git.beaker-project.org/cgit/beaker/
-            reference-repo: /var/lib/jenkins/jobs/beaker-rpms/workspace
-            url: ssh://jenkins@gerrit.beaker-project.org:29418/beaker
-            credentials-id: "fac135e6-5a13-4cd0-8dd5-737da825099b"
-            choosing-strategy: gerrit
-            name: gerrit
-            refspec: +refs/heads/*:refs/remotes/gerrit/* $GERRIT_REFSPEC
-            # 'branches' key is meaningless with Gerrit Trigger, but the
-            # default value '**' causes a NullPointerException:
-            # https://issues.jenkins-ci.org/browse/JENKINS-27559
-            branches:
-                - master
-            submodule:
-                recursive: true
-            merge:
-                remote: gerrit
-                branch: $GERRIT_BRANCH
-            changelog-against:
-                remote: gerrit
-                branch: $GERRIT_BRANCH
-            clean:
-                before: true
-            wipe-workspace: false
-            skip-tag: true
-            use-author: true
-    triggers:
-        - gerrit:
-            server-name: gerrit.beaker-project.org
-            projects:
-                - project-compare-type: PLAIN
-                  project-pattern: beaker
-                  branches:
-                    - branch-compare-type: ANT
-                      branch-pattern: "**"
-            trigger-on:
-                - comment-added-event:
-                    approval-category: Ready-for-Checks
-                    approval-value: 1
-            custom-url: "https://beaker-project.org/jenkins-results/${JOB_NAME}/${BUILD_NUMBER}/"
+    scm: !include beaker-review-checks-scmconfig.yaml.inc
+    triggers: !include beaker-review-checks-triggerconfig.yaml.inc
     builders:
         - shell: |
-            if [[ "$GIT_BRANCH" == "origin/develop" ]] ; then
-                Misc/rpmbuild.sh --next-major -bs
-                Misc/rpmbuild.sh --next-major -bb
-            else
-                Misc/rpmbuild.sh -bs
-                Misc/rpmbuild.sh -bb
-            fi
-
-        - shell: |
-            if [ -f Misc/rpmlint-config.py ] ; then # since Beaker 22
-                rpmlint -f Misc/rpmlint-config.py -o "NetworkEnabled False" rpmbuild-output/*.rpm rpmbuild-output/*/*.rpm
-            fi
-
-        - shell: |
-            make -C documentation html SPHINXOPTS="-W"
-
-        - shell: |
-            Misc/run-pylint.sh --report=no --disable=W bkr.server bkr.labcontroller bkr.client bkr.common
-
-        - shell: |
+            export BEAKER_CLIENT_CONF=/etc/beaker/client-devel.conf
             job_submit_output=$(bkr job-submit - <<EOF
             <job group="beakerdevs" retention_tag="scratch">
                 <whiteboard>
@@ -151,13 +90,13 @@
             if [[ "$jobresult" != "Completed/Pass" ]] ; then
                 exit 1
             fi
-
     publishers:
+        - archive:
+            artifacts: beaker/**
         - junit:
             results: beaker/*/junit.xml
-
     wrappers:
         - publish-over-ssh-post-build:
             site: "beaker-project.org jenkins-results"
             source: "beaker/**"
-            target: "${JOB_NAME}/${BUILD_NUMBER}"
+            target: "$JOB_NAME/$BUILD_NUMBER"

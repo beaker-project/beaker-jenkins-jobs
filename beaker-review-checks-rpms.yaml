@@ -1,0 +1,38 @@
+- job-template:
+    name: beaker-review-checks-rpms-{distro}
+    description: |
+        Builds RPMs for patches posted to Gerrit.
+    logrotate:
+        daysToKeep: 30
+    concurrent: true
+    scm: !include beaker-review-checks-scmconfig.yaml.inc
+    triggers: !include beaker-review-checks-triggerconfig.yaml.inc
+    builders:
+        - shell: |
+            Misc/rpmbuild.sh --next-major -bs
+        - critical-block-start
+        - shell: |
+            mkdir -p mock-result
+            /usr/bin/mock --resultdir=mock-result -r {mockconfig} --clean --rebuild rpmbuild-output/*.src.rpm
+        - critical-block-end
+        - shell: |
+            if [ -f Misc/rpmlint-config.py ] ; then # since Beaker 22
+                rpmlint -f Misc/rpmlint-config.py -o "NetworkEnabled False" mock-result/*.rpm
+            fi
+    publishers:
+        - archive:
+            artifacts: mock-result/**
+    wrappers:
+        - exclusion:
+            resources:
+                - mockroot{distro}
+        - publish-over-ssh-post-build:
+            site: "beaker-project.org jenkins-results"
+            source: "mock-result/**"
+            target: "$JOB_NAME/$BUILD_NUMBER"
+
+- project:
+    name: beaker-review-checks-rpms
+    distro: !include beaker-rpms-distroconfig.yaml.inc
+    jobs:
+        - beaker-review-checks-rpms-{distro}

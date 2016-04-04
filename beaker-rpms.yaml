@@ -22,7 +22,12 @@
             recursive-submodules: true
     triggers:
         - pollscm: "H/5 * * * *"
+    wrappers:
+        - exclusion:
+            resources:
+                - mockroot{distro}
     builders:
+        - critical-block-start
         - shell: |
             if [[ "$GIT_BRANCH" == "origin/develop" ]] ; then
                 Misc/rpmbuild.sh --next-major -bs
@@ -31,6 +36,7 @@
             fi
             mkdir -p mock-result
             /usr/bin/mock --resultdir=mock-result -r {mockconfig} --clean --rebuild rpmbuild-output/*.src.rpm
+        - critical-block-end
         - shell: |
             # GIT_BRANCH is actually remote/branch, e.g. origin/develop
             # so we export GIT_BRANCH_NAME as just the branch name, develop
@@ -51,16 +57,6 @@
 
 - project:
     name: beaker-rpms
-    distro:
-        - Fedorarawhide:
-            mockconfig: fedora-rawhide-x86_64
-        - Fedora23:
-            mockconfig: fedora-23-x86_64
-        - Fedora22:
-            mockconfig: fedora-22-x86_64
-        - RedHatEnterpriseLinux7:
-            mockconfig: sed-rhel-7-x86_64
-        - RedHatEnterpriseLinux6:
-            mockconfig: eng-rhel-6-x86_64
+    distro: !include beaker-rpms-distroconfig.yaml.inc
     jobs:
         - beaker-rpms-{distro}

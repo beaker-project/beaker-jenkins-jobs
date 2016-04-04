@@ -1,0 +1,22 @@
+- job:
+    name: beaker-review-checks-pylint
+    description: |
+        Runs pylint on patches posted to Gerrit.
+    logrotate:
+        daysToKeep: 30
+    concurrent: true
+    scm: !include beaker-review-checks-scmconfig.yaml.inc
+    triggers: !include beaker-review-checks-triggerconfig.yaml.inc
+    builders:
+        - shell: |
+            Misc/run-pylint.sh --report=no --disable=W \
+                bkr.server bkr.labcontroller bkr.client bkr.common \
+                | tee pylint.out
+    publishers:
+        - archive:
+            artifacts: pylint.out
+    wrappers:
+        - publish-over-ssh-post-build:
+            site: "beaker-project.org jenkins-results"
+            source: "pylint.out"
+            target: "$JOB_NAME/$BUILD_NUMBER"
