@@ -10,6 +10,7 @@
     triggers: !include beaker-review-checks-triggerconfig.yaml.inc
     builders:
         - shell: |
+            set -o pipefail
             Misc/run-pylint.sh --report=no --disable=W \
                 bkr.server bkr.labcontroller bkr.client bkr.common \
                 | tee pylint.out
