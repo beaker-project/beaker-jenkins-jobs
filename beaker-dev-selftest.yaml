@@ -1,0 +1,42 @@
+- job:
+    name: beaker-dev-selftest
+    description: |
+        Runs bkr workflow-selftest against the Beaker devel environment, to 
+        check that the currently deployed Beaker release works properly.
+    parameters:
+        - string:
+            name: WHITEBOARD
+            default: "self-test for <unspecified purpose>"
+            description: |
+                Job whiteboard to be used when submitting the self-test job to 
+                Beaker. If this is for acceptance testing for a Beaker release, 
+                use the whiteboard value to indicate that.
+    scm:
+        - git:
+            url: git://git.beaker-project.org/beaker-workflow-selftest
+            branches:
+                - origin/master
+            clean: true
+            wipe-workspace: false
+            skip-tag: true
+    publishers:
+        - archive:
+            artifacts: beaker/**
+    builders:
+        - shell: |
+            export BEAKER_CLIENT_CONF=/etc/beaker/client-devel.conf
+
+            python setup.py egg_info
+            export PYTHONPATH=src
+            workflow_output=$(bkr workflow-selftest --whiteboard "$WHITEBOARD")
+            jobid=$(echo $workflow_output | awk -F\' '{print $2}')
+
+            bkr job-watch $jobid || :
+
+            mkdir -p beaker/$jobid
+            bkr job-results --prettyxml $jobid >beaker/$jobid/results.xml
+
+            jobresult=$(xmlstarlet sel -t -v 'concat(/job/@status, "/", /job/@result)' <beaker/$jobid/results.xml)
+            if [[ "$jobresult" != "Completed/Pass" ]] ; then
+                exit 1
+            fi
