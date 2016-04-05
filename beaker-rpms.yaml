@@ -21,6 +21,7 @@
             skip-tag: true
             use-author: true
             recursive-submodules: true
+            reference-repo: /var/lib/jenkins/gitreference/beaker
     triggers:
         - pollscm: "H/5 * * * *"
     wrappers:

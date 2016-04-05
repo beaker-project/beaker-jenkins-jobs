@@ -1,7 +1,7 @@
 - git:
     browser: cgit
     browser-url: https://git.beaker-project.org/cgit/beaker/
-    reference-repo: /var/lib/jenkins/jobs/beaker-rpms-RedHatEnterpriseLinux6/workspace
+    reference-repo: /var/lib/jenkins/gitreference/beaker
     url: ssh://jenkins@gerrit.beaker-project.org:29418/beaker
     credentials-id: "fac135e6-5a13-4cd0-8dd5-737da825099b"
     choosing-strategy: gerrit
