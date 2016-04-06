@@ -29,7 +29,7 @@
                 - mockroot{distro}
         - publish-over-ssh-post-build:
             site: "beaker-project.org jenkins-results"
-            source: "mock-result/**"
+            source: "mock-result/*.log"
             target: "$JOB_NAME/$BUILD_NUMBER"
 
 - project:
