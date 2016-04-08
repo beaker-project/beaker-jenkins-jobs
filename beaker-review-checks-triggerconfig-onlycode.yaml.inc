@@ -14,3 +14,4 @@
             approval-category: Ready-for-Checks
             approval-value: 1
     custom-url: "https://beaker-project.org/jenkins-results/$JOB_NAME/$BUILD_NUMBER/"
+    escape-quotes: false
