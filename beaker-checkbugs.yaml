@@ -1,0 +1,38 @@
+- job:
+    name: beaker-checkbugs
+    description: |
+        Checks that Beaker bugs and Gerrit patches are in a consistent state,
+        using the checkbugs.py script from beaker-administrivia.
+    logrotate:
+        numToKeep: 30
+    scm:
+        - git:
+            url: git://git.beaker-project.org/beaker
+            branches:
+                - origin/develop
+                - origin/release-*
+            basedir: beaker
+            clean: true
+            wipe-workspace: false
+            skip-tag: true
+            reference-repo: /var/lib/jenkins/jobs/beaker-rpms-RedHatEnterpriseLinux6/workspace
+        - git:
+            url: git://git.beaker-project.org/beaker-administrivia
+            branches:
+                - origin/master
+            basedir: beaker-administrivia
+            clean: true
+            wipe-workspace: false
+            skip-tag: true
+
+    triggers:
+        - pollscm: "H/5 * * * *"
+        - timed: "H/15 * * * *"
+
+    builders:
+        - shell: |
+            cd beaker
+            ../beaker-administrivia/checkbugs.py
+
+    publishers:
+        - report-failures
