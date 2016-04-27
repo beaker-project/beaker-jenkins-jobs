@@ -19,10 +19,10 @@
             fi
             taskid=$(grep -P -o '(?<=Created task: )\d+' <<<"$output")
             set +e
-            koji -p beakerkoji watch-task ${{taskids[@]}}
+            koji -p beakerkoji watch-task $taskid
             rc=$?
             mkdir -p koji-logs
-            koji -p beakerkoji download-logs -r -d koji-logs ${{taskids[@]}}
+            koji -p beakerkoji download-logs -r -d koji-logs $taskid
             exit $rc
     publishers:
         - archive:
