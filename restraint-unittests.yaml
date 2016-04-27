@@ -1,5 +1,5 @@
 - job:
-    name: restraint-check
+    name: restraint-unittests
     description: "Restraint unit tests"
     node: fedora
     scm:
