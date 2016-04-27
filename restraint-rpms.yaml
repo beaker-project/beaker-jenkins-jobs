@@ -45,12 +45,6 @@
         - Fedora22:
             dist: .fc22
             kojitag: beaker-harness-fedora-22
-        - RedHatEnterpriseLinux-LE7:
-            dist: .ael7b
-            kojitag: beaker-harness-rhel-7-ppc64le
-        - RedHatEnterpriseLinuxforARM7:
-            dist: .aa7a
-            kojitag: beaker-harness-rhel-7-aarch64
         - RedHatEnterpriseLinux7:
             dist: .el7_2
             kojitag: beaker-harness-rhel-7
