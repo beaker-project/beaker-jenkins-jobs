@@ -16,14 +16,17 @@
             branches:
                 - origin/develop
                 - origin/release-*
-            clean: true
+            clean:
+                before: true
             wipe-workspace: false
             skip-tag: true
             use-author: true
-            recursive-submodules: true
+            submodule:
+                recursive: true
             reference-repo: /var/lib/jenkins/gitreference/beaker
     triggers:
-        - pollscm: "H/5 * * * *"
+        - pollscm:
+            cron: "H/5 * * * *"
     wrappers:
         - exclusion:
             resources:

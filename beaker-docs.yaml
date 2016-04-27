@@ -21,7 +21,8 @@
             branches:
                 - origin/master
             basedir: beaker-project.org
-            clean: true
+            clean:
+                before: true
             wipe-workspace: false
             skip-tag: true
             included-regions:
@@ -35,12 +36,14 @@
             branches:
                 - origin/{branch}
             basedir: beaker
-            clean: true
+            clean:
+                before: true
             wipe-workspace: false
             skip-tag: true
             reference-repo: /var/lib/jenkins/jobs/beaker-rpms-RedHatEnterpriseLinux6/workspace
     triggers:
-        - pollscm: "H/5 * * * *"
+        - pollscm:
+            cron: "H/5 * * * *"
     wrappers:
         - exclusion:
             resources:

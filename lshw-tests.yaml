@@ -11,7 +11,8 @@
             branches:
                 - origin/master
             basedir: lshw
-            clean: true
+            clean:
+                before: true
             wipe-workspace: false
             skip-tag: true
         - git:
@@ -19,12 +20,14 @@
             branches:
                 - origin/beaker
             basedir: lshw-tests
-            clean: true
+            clean:
+                before: true
             wipe-workspace: false
             skip-tag: true
 
     triggers:
-        - pollscm: "H/5 * * * *"
+        - pollscm:
+            cron: "H/5 * * * *"
 
     builders:
         - shell: |

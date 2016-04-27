@@ -9,12 +9,14 @@
             url: git://git.beaker-project.org/restraint
             branches:
                 - origin/master
-            clean: true
+            clean:
+                before: true
             wipe-workspace: false
             skip-tag: true
             reference-repo: /var/lib/jenkins/gitreference/restraint
     triggers:
-        - pollscm: "H/5 * * * *"
+        - pollscm:
+            cron: "H/5 * * * *"
     builders:
         - restraint-fetch-tarballs
         - critical-block-start

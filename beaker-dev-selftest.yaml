@@ -16,7 +16,8 @@
             url: git://git.beaker-project.org/beaker-workflow-selftest
             branches:
                 - origin/master
-            clean: true
+            clean:
+                before: true
             wipe-workspace: false
             skip-tag: true
     publishers:

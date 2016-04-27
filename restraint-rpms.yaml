@@ -7,11 +7,13 @@
             url: git://git.beaker-project.org/restraint
             branches:
                 - origin/master
-            clean: true
+            clean:
+                before: true
             wipe-workspace: false
             skip-tag: true
     triggers:
-        - pollscm: "H/5 * * * *"
+        - pollscm:
+            cron: "H/5 * * * *"
     publishers:
         - report-failures
     builders:

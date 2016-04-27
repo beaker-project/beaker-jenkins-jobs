@@ -12,7 +12,8 @@
                 - origin/develop
                 - origin/release-*
             basedir: beaker
-            clean: true
+            clean:
+                before: true
             wipe-workspace: false
             skip-tag: true
             reference-repo: /var/lib/jenkins/jobs/beaker-rpms-RedHatEnterpriseLinux6/workspace
@@ -21,12 +22,14 @@
             branches:
                 - origin/master
             basedir: beaker-administrivia
-            clean: true
+            clean:
+                before: true
             wipe-workspace: false
             skip-tag: true
 
     triggers:
-        - pollscm: "H/5 * * * *"
+        - pollscm:
+            cron: "H/5 * * * *"
         - timed: "H * * * *"
 
     builders:
