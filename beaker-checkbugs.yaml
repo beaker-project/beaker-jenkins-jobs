@@ -27,7 +27,7 @@
 
     triggers:
         - pollscm: "H/5 * * * *"
-        - timed: "H/15 * * * *"
+        - timed: "H * * * *"
 
     builders:
         - shell: |
