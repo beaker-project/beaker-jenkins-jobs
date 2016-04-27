@@ -1,6 +1,8 @@
 - job:
     name: restraint-valgrind
-    description: "Restraint unit tests in Valgrind"
+    description: |
+        Runs Restraint unit tests in Valgrind.
+    concurrent: true
     node: fedora
     scm:
         - git:
@@ -14,8 +16,15 @@
     triggers:
         - pollscm: "H/5 * * * *"
     builders:
+        - restraint-fetch-tarballs
+        - critical-block-start
         - shell: |
             unset http_proxy
             make -C src valgrind
+        - critical-block-end
+    wrappers:
+        - exclusion:
+            resources:
+                - restraint-unittests-tcp-port-binding
     publishers:
         - report-failures

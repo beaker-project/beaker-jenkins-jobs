@@ -1,0 +1,24 @@
+- Fedorarawhide:
+    dist: .fc25
+    kojitag: beaker-harness-fedora-rawhide
+- Fedora24:
+    dist: .fc24
+    kojitag: beaker-harness-fedora-24
+- Fedora23:
+    dist: .fc23
+    kojitag: beaker-harness-fedora-23
+- Fedora22:
+    dist: .fc22
+    kojitag: beaker-harness-fedora-22
+- RedHatEnterpriseLinux7:
+    dist: .el7_2
+    kojitag: beaker-harness-rhel-7
+- RedHatEnterpriseLinux6:
+    dist: .el6
+    kojitag: beaker-harness-rhel-6
+- RedHatEnterpriseLinux5:
+    dist: .el5_9
+    kojitag: beaker-harness-rhel-5
+- RedHatEnterpriseLinux4:
+    dist: .el4_8
+    kojitag: beaker-harness-rhel-4

@@ -1,0 +1,29 @@
+- job:
+    name: restraint-review-checks-unittests
+    description: |
+        Runs Restraint unit tests for patches posted to Gerrit.
+    logrotate:
+        daysToKeep: 30
+    concurrent: true
+    node: fedora
+    scm: !include restraint-review-checks-scmconfig.yaml.inc
+    triggers: !include restraint-review-checks-triggerconfig.yaml.inc
+    builders:
+        - restraint-fetch-tarballs
+        - critical-block-start
+        - shell: |
+            unset http_proxy
+            set -o pipefail
+            make check | tee check.out
+        - critical-block-end
+    publishers:
+        - archive:
+            artifacts: check.out
+    wrappers:
+        - exclusion:
+            resources:
+                - restraint-unittests-tcp-port-binding
+        - publish-over-ssh-post-build:
+            site: "beaker-project.org jenkins-results"
+            source: "check.out"
+            target: "$JOB_NAME/$BUILD_NUMBER"

@@ -1,0 +1,24 @@
+- job:
+    name: restraint-review-checks-valgrind
+    description: |
+        Runs Restraint unit tests in Valgrind, for patches posted to Gerrit.
+    logrotate:
+        daysToKeep: 30
+    concurrent: true
+    node: fedora
+    scm: !include restraint-review-checks-scmconfig.yaml.inc
+    triggers: !include restraint-review-checks-triggerconfig.yaml.inc
+    builders:
+        - restraint-fetch-tarballs
+        - shell: |
+            unset http_proxy
+            set -o pipefail
+            make -C src valgrind | tee valgrind.out
+    publishers:
+        - archive:
+            artifacts: valgrind.out
+    wrappers:
+        - publish-over-ssh-post-build:
+            site: "beaker-project.org jenkins-results"
+            source: "valgrind.out"
+            target: "$JOB_NAME/$BUILD_NUMBER"

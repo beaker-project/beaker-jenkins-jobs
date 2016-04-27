@@ -1,0 +1,40 @@
+- job-template:
+    name: restraint-review-checks-rpms-{distro}
+    description: |
+        Builds RPMs for {distro} in Beaker's Koji for patches posted to Gerrit.
+    logrotate:
+        daysToKeep: 30
+    concurrent: true
+    scm: !include restraint-review-checks-scmconfig.yaml.inc
+    triggers: !include restraint-review-checks-triggerconfig.yaml.inc
+    builders:
+        - restraint-fetch-tarballs
+        - shell: |
+            rm -f *.src.rpm
+            tito build --dist {dist} --test --srpm --output .
+            output=$(koji -p beakerkoji build --nowait --scratch --arch-override=x86_64 {kojitag} *.src.rpm)
+            if [[ $? -ne 0 ]] ; then
+                echo "$output" >&2
+                exit 1
+            fi
+            taskid=$(grep -P -o '(?<=Created task: )\d+' <<<"$output")
+            set +e
+            koji -p beakerkoji watch-task ${{taskids[@]}}
+            rc=$?
+            mkdir -p koji-logs
+            koji -p beakerkoji download-logs -r -d koji-logs ${{taskids[@]}}
+            exit $rc
+    publishers:
+        - archive:
+            artifacts: koji-logs/**
+    wrappers:
+        - publish-over-ssh-post-build:
+            site: "beaker-project.org jenkins-results"
+            source: "koji-logs/**"
+            target: "$JOB_NAME/$BUILD_NUMBER"
+
+- project:
+    name: restraint-review-checks-rpms
+    distro: !include restraint-rpms-distroconfig.yaml.inc
+    jobs:
+        - restraint-review-checks-rpms-{distro}

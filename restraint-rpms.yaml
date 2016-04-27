@@ -15,10 +15,7 @@
     publishers:
         - report-failures
     builders:
-        - shell: |
-            # Hack to pull tarballs from dist-git, instead of from the internet
-            cd third-party
-            curl -fsS 'http://pkgs.devel.redhat.com/cgit/rpms/restraint/plain/sources?h=eng-rhel-6' | while read hash filename ; do curl -fsSLO http://pkgs.devel.redhat.com/repo/pkgs/restraint/$filename/$hash/$filename ; done
+        - restraint-fetch-tarballs
         - shell: |
             rm -f *.src.rpm
             commits_since_tag=$(git rev-list $(git describe --abbrev=0).. | wc -l)
@@ -32,30 +29,6 @@
 
 - project:
     name: restraint-rpms
-    distro:
-        - Fedorarawhide:
-            dist: .fc25
-            kojitag: beaker-harness-fedora-rawhide
-        - Fedora24:
-            dist: .fc24
-            kojitag: beaker-harness-fedora-24
-        - Fedora23:
-            dist: .fc23
-            kojitag: beaker-harness-fedora-23
-        - Fedora22:
-            dist: .fc22
-            kojitag: beaker-harness-fedora-22
-        - RedHatEnterpriseLinux7:
-            dist: .el7_2
-            kojitag: beaker-harness-rhel-7
-        - RedHatEnterpriseLinux6:
-            dist: .el6
-            kojitag: beaker-harness-rhel-6
-        - RedHatEnterpriseLinux5:
-            dist: .el5_9
-            kojitag: beaker-harness-rhel-5
-        - RedHatEnterpriseLinux4:
-            dist: .el4_8
-            kojitag: beaker-harness-rhel-4
+    distro: !include restraint-rpms-distroconfig.yaml.inc
     jobs:
         - "restraint-rpms-{distro}"
