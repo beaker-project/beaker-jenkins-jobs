@@ -13,7 +13,7 @@
         - shell: |
             unset http_proxy
             set -o pipefail
-            make -C src valgrind | tee valgrind.out
+            make -C src valgrind 2>&1 | tee valgrind.out
     publishers:
         - archive:
             artifacts: valgrind.out
