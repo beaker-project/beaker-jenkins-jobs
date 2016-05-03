@@ -16,7 +16,7 @@
                 before: true
             wipe-workspace: false
             skip-tag: true
-            reference-repo: /var/lib/jenkins/jobs/beaker-rpms-RedHatEnterpriseLinux6/workspace
+            reference-repo: /var/lib/jenkins/gitreference/beaker
         - git:
             url: git://git.beaker-project.org/beaker-administrivia
             branches:

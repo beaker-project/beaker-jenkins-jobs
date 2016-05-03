@@ -15,6 +15,7 @@
             # no clean because we don't want to fetch tarballs and RPMs every time!
             wipe-workspace: false
             skip-tag: true
+            reference-repo: /var/lib/jenkins/gitreference/beaker-project.org
         - git:
             url: git://git.beaker-project.org/beaker
             branches:
@@ -24,7 +25,7 @@
                 before: true
             wipe-workspace: false
             skip-tag: true
-            reference-repo: /var/lib/jenkins/jobs/beaker-rpms/workspace
+            reference-repo: /var/lib/jenkins/gitreference/beaker
     triggers:
         - pollscm:
             cron: "H/5 * * * *"
