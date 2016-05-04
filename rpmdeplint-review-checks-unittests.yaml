@@ -1,0 +1,54 @@
+- job:
+    name: rpmdeplint-review-checks-unittests
+    description: |
+      Runs all tests for rpmdeplint patches posted to Gerrit
+    node: fedora
+    scm:
+        - git:
+            url: ssh://jenkins@gerrit.beaker-project.org:29418/rpmdeplint
+            credentials-id: "fac135e6-5a13-4cd0-8dd5-737da825099b"
+            choosing-strategy: gerrit
+            name: gerrit
+            refspec: "+refs/heads/*:refs/remotes/gerrit/* $GERRIT_REFSPEC"
+            # 'branches' key is meaningless with Gerrit Trigger, but the
+            # default value '**' causes a NullPointerException:
+            # https://issues.jenkins-ci.org/browse/JENKINS-27559
+            branches:
+                - master
+            merge:
+                remote: gerrit
+                branch: $GERRIT_BRANCH
+            changelog-against:
+                remote: gerrit
+                branch: $GERRIT_BRANCH
+            clean:
+                after: true
+            wipe-workspace: false
+            skip-tag: true
+            reference-repo: /var/lib/jenkins/gitreference/rpmdeplint
+    triggers:
+        - gerrit:
+            server-name: gerrit.beaker-project.org
+            projects:
+                - project-compare-type: PLAIN
+                  project-pattern: rpmdeplint
+                  branches:
+                    - branch-compare-type: ANT
+                      branch-pattern: "**"
+            trigger-on:
+                - comment-added-event:
+                    approval-category: Ready-for-Checks
+                    approval-value: 1
+            custom-url: "https://beaker-project.org/jenkins-results/${JOB_NAME}/${BUILD_NUMBER}/"
+    builders:
+        - shell: |
+            set -o pipefail
+            python setup.py test 2>&1 | tee tests.out
+    publishers:
+        - archive:
+            artifacts: tests.out
+    wrappers:
+        - publish-over-ssh-post-build:
+            site: "beaker-project.org jenkins-results"
+            source: "tests.out"
+            target: "$JOB_NAME/$BUILD_NUMBER"
