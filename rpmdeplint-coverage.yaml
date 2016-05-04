@@ -1,0 +1,38 @@
+- job:
+    name: rpmdeplint-coverage
+    description: "Collect coverage analysis for rpmdeplint"
+    node: fedora
+    scm:
+        - git:
+            url: git://git.beaker-project.org/rpmdeplint
+            branches:
+                - origin/master
+            clean: true
+            wipe-workspace: false
+            skip-tag: true
+            reference-repo: /var/lib/jenkins/gitreference/rpmdeplint
+    triggers:
+        - pollscm: "H/5 * * * *"
+    builders:
+        - shell: |
+            python setup.py test --addopts --cov=rpmdeplint 
+            coverage xml
+    publishers:
+        - cobertura:
+            report-file: "coverage.xml"
+            only-stable: true
+            fail-no-reports: true
+            fail-unhealthy: true
+            fail-unstable: true
+            health-auto-update: true
+            stability-auto-update: true
+            zoom-coverage-chart: true
+            targets:
+              - files:
+                  healthy: 10
+                  unhealthy: 20
+                  failing: 30
+              - method:
+                  healthy: 50
+                  unhealthy: 40
+                  failing: 30
