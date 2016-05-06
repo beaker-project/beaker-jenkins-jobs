@@ -1,19 +1,22 @@
 - job:
-    name: rpmdeplint-review-checks-unittests
+    name: rpmdeplint-review-checks-pylint
     description: |
-      Runs all tests for rpmdeplint patches posted to Gerrit
+        Runs pylint on patches posted to Gerrit.
+    logrotate:
+        daysToKeep: 30
+    concurrent: true
     node: fedora
     scm: !include rpmdeplint-review-checks-scmconfig.yaml.inc
     triggers: !include rpmdeplint-review-checks-triggerconfig.yaml.inc
     builders:
         - shell: |
             set -o pipefail
-            python setup.py test 2>&1 | tee tests.out
+            pylint --report=no --disable=I,R,C,W,E1101 rpmdeplint | tee pylint.out
     publishers:
         - archive:
-            artifacts: tests.out
+            artifacts: pylint.out
     wrappers:
         - publish-over-ssh-post-build:
             site: "beaker-project.org jenkins-results"
-            source: "tests.out"
+            source: "pylint.out"
             target: "$JOB_NAME/$BUILD_NUMBER"
