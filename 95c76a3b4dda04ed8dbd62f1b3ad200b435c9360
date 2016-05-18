@@ -1,0 +1,8 @@
+Ready-for-Checks+1: Roman Joost <rjoost@redhat.com>
+Code-Review+2: Dan Callaghan <dcallagh@redhat.com>
+Verified+1: Roman Joost <rjoost@redhat.com>
+Submitted-by: Roman Joost <rjoost@redhat.com>
+Submitted-at: Wed, 18 May 2016 20:28:33 +0000
+Reviewed-on: http://gerrit.beaker-project.org/4865
+Project: beaker-jenkins-jobs
+Branch: refs/heads/master
