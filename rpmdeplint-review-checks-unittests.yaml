@@ -8,7 +8,9 @@
     builders:
         - shell: |
             set -o pipefail
-            python setup.py test 2>&1 | tee tests.out
+            mkdir -p $(pwd)/buildroot
+            python setup.py install --root=$(pwd)/buildroot
+            PYTHONPATH=$(pwd)/buildroot/usr/lib/python2.7/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH py.test -s 2>&1 | tee tests.out
     publishers:
         - archive:
             artifacts: tests.out
