@@ -1,0 +1,41 @@
+- job:
+    name: beaker-rpmdeplint
+    description: |
+        Finds RPM dependency problems for Beaker builds in Brew.
+    concurrent: true
+    node: fedora
+    scm:
+        # Using a git checkout of rpmdeplint for now, while it's still 
+        # unreleased and under active development.
+        - git:
+            url: git://git.beaker-project.org/rpmdeplint
+            branches:
+                - origin/master
+            basedir: rpmdeplint
+            clean:
+                before: true
+            wipe-workspace: false
+            skip-tag: true
+            reference-repo: /var/lib/jenkins/gitreference/rpmdeplint
+    triggers:
+        # This requires the jenkins-ci-sidekick package, which is currently internal-only...
+        - ci-trigger:
+            jms-selector: "package = 'beaker' AND method = 'build' AND CI_TYPE = 'brew-taskstatechange' AND new = 'CLOSED'"
+    builders:
+        - shell: |
+            # Build rpmdeplint from git and install it into a subdirectory of 
+            # the workspace, so that we can run it from there.
+            R="$(pwd)/buildroot"
+            mkdir -p "$R"
+            ( cd rpmdeplint && python setup.py install --root="$R" )
+            export PYTHONPATH="$R/usr/lib/python2.7/site-packages" PATH="$R/usr/bin:$PATH"
+
+            rm -f *.rpm
+            koji -p brew download-task $(jq .info.id <<<"$CI_MESSAGE")
+            rpmdeplint \
+                --repo=rhel6,http://cdn.rcm-internal.redhat.com/content/dist/rhel/server/6/6Server/x86_64/os/ \
+                --repo=rhel6-optional,http://cdn.rcm-internal.redhat.com/content/dist/rhel/server/6/6Server/x86_64/optional/os/ \
+                --repo=beaker-server-rhel6,https://beaker-project.org/yum/server/RedHatEnterpriseLinux6/ \
+                *.rpm
+    publishers:
+        - report-failures
