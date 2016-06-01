@@ -15,6 +15,11 @@
         - pollscm: "H/5 * * * *"
     builders:
         - shell: |
-            python setup.py test
+            set -o pipefail
+            mkdir -p $(pwd)/buildroot
+            python setup.py install --root=$(pwd)/buildroot
+            PYTHONPATH=$(pwd)/buildroot/usr/lib/python2.7/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH py.test -s 2>&1 | tee tests.out
     publishers:
         - report-failures
+        - archive:
+            artifacts: tests.out
