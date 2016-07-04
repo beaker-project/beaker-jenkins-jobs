@@ -1,0 +1,22 @@
+- job:
+    name: rpmdeplint-review-checks-docs
+    description: |
+        Builds Sphinx documentation for patches posted to Gerrit.
+    logrotate:
+        daysToKeep: 30
+    concurrent: true
+    node: fedora
+    scm: !include rpmdeplint-review-checks-scmconfig.yaml.inc
+    triggers: !include rpmdeplint-review-checks-triggerconfig.yaml.inc
+    builders:
+        - shell: |
+            set -o pipefail
+            PYTHONPATH=. sphinx-build -W -b html ./docs ./docs/_build/html/ 2>&1 | tee builddocs.out 
+    publishers:
+        - archive:
+            artifacts: docs/_build/html/**
+    wrappers:
+        - publish-over-ssh-post-build:
+            site: "beaker-project.org jenkins-results"
+            source: "docs/_build/html/**"
+            target: "$JOB_NAME/$BUILD_NUMBER"
