@@ -20,7 +20,7 @@
     triggers:
         # This requires the jenkins-ci-sidekick package, which is currently internal-only...
         - ci-trigger:
-            jms-selector: "package = 'beaker' AND method = 'build' AND CI_TYPE = 'brew-taskstatechange' AND new = 'CLOSED'"
+            jms-selector: "package = 'beaker' AND method = 'build' AND CI_TYPE = 'brew-taskstatechange' AND new = 'CLOSED' AND target = 'eng-rhel-6-candidate'"
     builders:
         - shell: |
             # Build rpmdeplint from git and install it into a subdirectory of 
