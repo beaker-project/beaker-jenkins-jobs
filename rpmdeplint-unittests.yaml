@@ -17,11 +17,16 @@
         - shell: |
             set -o pipefail
             mkdir -p $(pwd)/buildroot
-            python setup.py install --root=$(pwd)/buildroot
+            python2 setup.py install --root=$(pwd)/buildroot
             PYTHONPATH=$(pwd)/buildroot/usr/lib/python2.7/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
-                py.test -s -vv --full-trace --durations=10 --junit-xml=junit-unit.xml rpmdeplint 2>&1 | tee tests.out
+                py.test-2 -s -vv --full-trace --durations=10 --junit-xml=junit-unit.xml rpmdeplint 2>&1 | tee tests.out
             PYTHONPATH=$(pwd)/buildroot/usr/lib/python2.7/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
-                py.test -s -vv --full-trace --durations=10 --junit-xml=junit-accept.xml acceptance_tests 2>&1 | tee --append tests.out
+                py.test-2 -s -vv --full-trace --durations=10 --junit-xml=junit-accept.xml acceptance_tests 2>&1 | tee --append tests.out
+            python3 setup.py install --root=$(pwd)/buildroot
+            PYTHONPATH=$(pwd)/buildroot/usr/lib/python3.4/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
+                py.test-3 -s -vv --full-trace --durations=10 --junit-xml=junit-unit.xml rpmdeplint 2>&1 | tee --append tests.out
+            PYTHONPATH=$(pwd)/buildroot/usr/lib/python3.4/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
+                py.test-3 -s -vv --full-trace --durations=10 --junit-xml=junit-accept.xml acceptance_tests 2>&1 | tee --append tests.out
     publishers:
         - report-failures
         - archive:
