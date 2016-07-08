@@ -1,5 +1,5 @@
-- job:
-    name: beaker-review-checks-dogfood-RedHatEnterpriseLinux6
+- job-template:
+    name: beaker-review-checks-dogfood-{distro}
     description: |
         Runs Beaker's test suite inside Beaker, for patches posted to Gerrit.
     logrotate:
@@ -13,23 +13,24 @@
             job_submit_output=$(bkr job-submit - <<EOF
             <job group="beakerdevs" retention_tag="scratch">
                 <whiteboard>
-                    beaker dogfood for Gerrit change ${GERRIT_CHANGE_NUMBER} patch ${GERRIT_PATCHSET_NUMBER}: $(xmlstarlet esc "${GERRIT_CHANGE_SUBJECT}")
+                    beaker dogfood {distro} for Gerrit $GERRIT_CHANGE_NUMBER/$GERRIT_PATCHSET_NUMBER: $(xmlstarlet esc "$GERRIT_CHANGE_SUBJECT")
                 </whiteboard>
-                <recipeSet priority="Low">
+                <recipeSet priority="{jobprio}">
                     <recipe ks_meta="method=http selinux=disabled" whiteboard="Nose Tests">
                         <repos>
-                            <repo name="beaker-project-server" url="https://beaker-project.org/yum/server-testing/RedHatEnterpriseLinux6/" />
+                            {extrarepos}
+                            <repo name="beaker-project-server" url="https://beaker-project.org/yum/server-testing/{distro}/" />
                             <!-- harness repo is needed so that rhts-test-env and rhts-python versions match -->
-                            <repo name="beaker-project-harness" url="https://beaker-project.org/yum/harness-testing/RedHatEnterpriseLinux6/" />
+                            <repo name="beaker-project-harness" url="https://beaker-project.org/yum/harness-testing/{distro}/" />
                             <!-- for beaker-server-redhat -->
-                            <repo name="beaker-server-redhat" url="http://file.bos.redhat.com/~dcallagh/beaker-server-redhat/" />
+                            <repo name="beaker-server-redhat" url="http://file.bos.redhat.com/~dcallagh/beaker-server-redhat/{distro}/" />
                         </repos>
                         <packages>
                             <package name="-prelink" />
                             <package name="beaker-server-redhat" />
                         </packages>
                         <distroRequires>
-                            <distro_family op="=" value="RedHatEnterpriseLinux6"/>
+                            <distro_family op="=" value="{distro}"/>
                             <distro_arch op="=" value="x86_64" />
                             <distro_variant op="=" value="Server" />
                             <distro_tag op="=" value="RELEASED" />
@@ -50,9 +51,9 @@
                                 <param name="RHTS_OPTION_COMPATIBLE" value=""/>
                                 <param name="RHTS_OPTION_COMPAT_SERVICE" value=""/>
                                 <param name="SOURCE" value="_git"/>
-                                <param name="BEAKER_GIT_REF" value="${GERRIT_BRANCH}"/>
+                                <param name="BEAKER_GIT_REF" value="$GERRIT_BRANCH"/>
                                 <param name="BEAKER_GIT_REMOTE" value="https://gerrit.beaker-project.org/p/beaker"/>
-                                <param name="BEAKER_GIT_REMOTE_REF" value="${GERRIT_REFSPEC}"/>
+                                <param name="BEAKER_GIT_REMOTE_REF" value="$GERRIT_REFSPEC"/>
                                 <param name="BEAKER_GIT_REMOTE_MERGE" value="merge"/>
                             </params>
                         </task>
@@ -70,7 +71,7 @@
             </job>
             EOF
             )
-            jobid=$(echo $job_submit_output | awk -F\' '{print $2}')
+            jobid=$(echo $job_submit_output | awk -F\' '{{print $2}}')
 
             bkr job-watch $jobid || :
 
@@ -100,3 +101,9 @@
             site: "beaker-project.org jenkins-results"
             source: "beaker/**"
             target: "$JOB_NAME/$BUILD_NUMBER"
+
+- project:
+    name: beaker-review-checks-dogfood
+    distro: !include beaker-dogfood-distroconfig.yaml.inc
+    jobs:
+        - beaker-review-checks-dogfood-{distro}
