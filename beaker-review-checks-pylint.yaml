@@ -11,7 +11,7 @@
     builders:
         - shell: |
             set -o pipefail
-            Misc/run-pylint.sh --report=no --disable=W \
+            Misc/run-pylint.sh --reports=n --disable=W \
                 bkr.server bkr.labcontroller bkr.client bkr.common \
                 | tee pylint.out
     publishers:
