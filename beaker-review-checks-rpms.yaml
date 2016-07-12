@@ -11,11 +11,10 @@
     builders:
         - shell: |
             Misc/rpmbuild.sh --next-major -bs
-        - critical-block-start
         - shell: |
+            : ${{XDG_RUNTIME_DIR:=/run/user/$(id -u)}}
             mkdir -p mock-result
-            /usr/bin/mock --resultdir=mock-result -r {mockconfig} --clean --rebuild rpmbuild-output/*.src.rpm
-        - critical-block-end
+            flock $XDG_RUNTIME_DIR/beaker-jenkins-mock-flock-{mockconfig} /usr/bin/mock --resultdir=mock-result -r {mockconfig} --clean --rebuild rpmbuild-output/*.src.rpm
         - shell: |
             if [ -f Misc/rpmlint-config.py ] ; then # since Beaker 22
                 rpmlint -f Misc/rpmlint-config.py -o "NetworkEnabled False" mock-result/*.rpm
@@ -24,9 +23,6 @@
         - archive:
             artifacts: mock-result/**
     wrappers:
-        - exclusion:
-            resources:
-                - mockroot{distro}
         - publish-over-ssh-post-build:
             site: "beaker-project.org jenkins-results"
             source: "mock-result/*.log"

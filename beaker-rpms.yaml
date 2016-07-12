@@ -27,21 +27,16 @@
     triggers:
         - pollscm:
             cron: "H/5 * * * *"
-    wrappers:
-        - exclusion:
-            resources:
-                - mockroot{distro}
     builders:
-        - critical-block-start
         - shell: |
             if [[ "$GIT_BRANCH" == "origin/develop" ]] ; then
                 Misc/rpmbuild.sh --next-major -bs
             else
                 Misc/rpmbuild.sh -bs
             fi
+            : ${{XDG_RUNTIME_DIR:=/run/user/$(id -u)}}
             mkdir -p mock-result
-            /usr/bin/mock --resultdir=mock-result -r {mockconfig} --clean --rebuild rpmbuild-output/*.src.rpm
-        - critical-block-end
+            flock $XDG_RUNTIME_DIR/beaker-jenkins-mock-flock-{mockconfig} /usr/bin/mock --resultdir=mock-result -r {mockconfig} --clean --rebuild rpmbuild-output/*.src.rpm
         - shell: |
             # GIT_BRANCH is actually remote/branch, e.g. origin/develop
             # so we export GIT_BRANCH_NAME as just the branch name, develop
