@@ -37,7 +37,7 @@
                         </distroRequires>
                         <hostRequires>
                             <system_type value="Machine"/>
-                            <memory op="&gt;=" value="900" />
+                            <pool value="beaker-dogfood"/>
                         </hostRequires>
                         <partitions/>
                         <task name="/distribution/install" role="STANDALONE">
