@@ -55,6 +55,7 @@
                                 <param name="BEAKER_GIT_REMOTE" value="https://gerrit.beaker-project.org/p/beaker"/>
                                 <param name="BEAKER_GIT_REMOTE_REF" value="$GERRIT_REFSPEC"/>
                                 <param name="BEAKER_GIT_REMOTE_MERGE" value="merge"/>
+                                <param name="MYSQL_EXTRA_CONFIG" value="innodb-flush-log-at-trx-commit = 2"/>
                             </params>
                         </task>
                         <task name="/distribution/beaker/dogfood" role="STANDALONE">
