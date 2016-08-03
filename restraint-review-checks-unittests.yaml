@@ -7,7 +7,9 @@
     concurrent: true
     node: fedora
     scm: !include restraint-review-checks-scmconfig.yaml.inc
-    triggers: !include restraint-review-checks-triggerconfig.yaml.inc
+    triggers:
+        - restraint-review-checks-gerrit-trigger:
+            ignorefail: False
     builders:
         - restraint-fetch-tarballs
         - critical-block-start

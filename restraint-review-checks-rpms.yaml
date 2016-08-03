@@ -6,7 +6,9 @@
         daysToKeep: 30
     concurrent: true
     scm: !include restraint-review-checks-scmconfig.yaml.inc
-    triggers: !include restraint-review-checks-triggerconfig.yaml.inc
+    triggers:
+        - restraint-review-checks-gerrit-trigger:
+            ignorefail: {ignorefail}
     builders:
         - restraint-fetch-tarballs
         - shell: |
