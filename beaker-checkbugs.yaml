@@ -3,6 +3,9 @@
     description: |
         Checks that Beaker bugs and Gerrit patches are in a consistent state,
         using the checkbugs.py script from beaker-administrivia.
+    properties:
+        - priority-sorter:
+              priority: 50
     logrotate:
         numToKeep: 30
     scm:

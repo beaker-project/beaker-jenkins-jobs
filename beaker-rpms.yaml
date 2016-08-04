@@ -10,6 +10,9 @@
         # since RPMs are published to beaker-project.org.
         numToKeep: 10
     node: fedora
+    properties:
+        - priority-sorter:
+            priority: 150
     scm:
         - git:
             url: git://git.beaker-project.org/beaker

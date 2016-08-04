@@ -10,6 +10,9 @@
         the beaker-project.org Sphinx theme applied, and publishes them under 
         https://beaker-project.org/docs/ (for master) or 
         https://beaker-project.org/docs-<branch>/ (for all other branches).
+    properties:
+        - priority-sorter:
+            priority: 120
     logrotate:
         # We don't need to keep built docs in Jenkins permanently since all
         # changes to the web site are tracked in git on beaker-project.org,

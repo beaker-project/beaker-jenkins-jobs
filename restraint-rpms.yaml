@@ -2,6 +2,9 @@
     name: restraint-rpms-{distro}
     description: |
         Builds RPMs for {distro} in Beaker's Koji based on every restraint commit.
+    properties:
+        - priority-sorter:
+            priority: 120
     scm:
         - git:
             url: git://git.beaker-project.org/restraint

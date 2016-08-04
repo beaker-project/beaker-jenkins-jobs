@@ -6,6 +6,9 @@
         (some static files, release tarballs, yum repos, and Beaker-in-a-box) 
         and publishes it to https://beaker-project.org/.
     auth-token: !include beaker-project.org-auth-token.txt
+    properties:
+        - priority-sorter:
+            priority: 150
     scm:
         - git:
             url: git://git.beaker-project.org/beaker-project.org
