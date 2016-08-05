@@ -19,14 +19,9 @@
             cron: "H/5 * * * *"
     builders:
         - restraint-fetch-tarballs
-        - critical-block-start
         - shell: |
+            : ${XDG_RUNTIME_DIR:=/run/user/$(id -u)}
             unset http_proxy
-            make -C src valgrind
-        - critical-block-end
-    wrappers:
-        - exclusion:
-            resources:
-                - restraint-unittests-tcp-port-binding
+            flock $XDG_RUNTIME_DIR/restraint-tests-flock make -C src valgrind
     publishers:
         - report-failures

@@ -13,9 +13,10 @@
     builders:
         - restraint-fetch-tarballs
         - shell: |
+            : ${XDG_RUNTIME_DIR:=/run/user/$(id -u)}
             unset http_proxy
             set -o pipefail
-            make -C src valgrind 2>&1 | tee valgrind.out
+            flock $XDG_RUNTIME_DIR/restraint-tests-flock make -C src valgrind 2>&1 | tee valgrind.out
     publishers:
         - archive:
             artifacts: valgrind.out

@@ -12,19 +12,15 @@
             ignorefail: False
     builders:
         - restraint-fetch-tarballs
-        - critical-block-start
         - shell: |
+            : ${XDG_RUNTIME_DIR:=/run/user/$(id -u)}
             unset http_proxy
             set -o pipefail
-            make check | tee check.out
-        - critical-block-end
+            flock $XDG_RUNTIME_DIR/restraint-tests-flock make check | tee check.out
     publishers:
         - archive:
             artifacts: check.out
     wrappers:
-        - exclusion:
-            resources:
-                - restraint-unittests-tcp-port-binding
         - publish-over-ssh-post-build:
             site: "beaker-project.org jenkins-results"
             source: "check.out"
