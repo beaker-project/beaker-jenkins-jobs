@@ -1,9 +1,11 @@
 - Fedorarawhide:
     mockconfig: fedora-rawhide-x86_64
+- Fedora25:
+    mockconfig: fedora-25-x86_64
+- Fedora24:
+    mockconfig: fedora-24-x86_64
 - Fedora23:
     mockconfig: fedora-23-x86_64
-- Fedora22:
-    mockconfig: fedora-22-x86_64
 - RedHatEnterpriseLinux7:
     mockconfig: sed-rhel-7-x86_64
 - RedHatEnterpriseLinux6:

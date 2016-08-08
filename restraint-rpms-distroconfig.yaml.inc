@@ -14,10 +14,6 @@
     dist: .fc23
     kojitag: beaker-harness-fedora-23
     ignorefail: False
-- Fedora22:
-    dist: .fc22
-    kojitag: beaker-harness-fedora-22
-    ignorefail: False
 - RedHatEnterpriseLinux7:
     dist: .el7_2
     kojitag: beaker-harness-rhel-7
