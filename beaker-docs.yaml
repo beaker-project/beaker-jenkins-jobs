@@ -18,6 +18,7 @@
         # changes to the web site are tracked in git on beaker-project.org,
         # including every docs build that is published.
         numToKeep: 30
+    node: fedora
     scm:
         - git:
             url: git://git.beaker-project.org/beaker-project.org
@@ -51,6 +52,9 @@
         - exclusion:
             resources:
                 - htdocs
+        - ssh-agent-credentials:
+            users:
+                - '8f6d9af6-2faf-451a-86f5-ad433b0f9e9a'
     builders:
         - shell: |
             cd beaker/
@@ -73,7 +77,7 @@
             # In Sphinx 1.3 this can become -D html_theme_path=...
             echo "html_theme_path = ['../../beaker-project.org/sphinx-theme']" >>documentation/conf.py
 
-            PYTHONPATH=Common:Server:Client/src python -c '__requires__ = ["Sphinx >= 1.0", "CherryPy < 3.0"]; import pkg_resources; execfile("/usr/bin/sphinx-1.0-build")' \
+            PYTHONPATH=Common:Server:Client/src python -c '__requires__ = ["CherryPy < 3.0"]; import pkg_resources; execfile("/usr/bin/sphinx-build")' \
                 -b html -D html_theme=beaker -A branch_warning="$branch_warning" documentation documentation/_build/html
             rm -r documentation/_build/html/.doctrees
 
@@ -82,8 +86,8 @@
             cd beaker/
             destdir=docs
             if [[ "{branch}" != master ]] ; then destdir="docs-{branch}" ; fi
-            rsync -v -e 'ssh -i /var/lib/jenkins/.ssh/id_rsa' -r -l --checksum --delete-after documentation/_build/html/ "jenkins@beaker-project.org:/srv/www/beaker-project.org/htdocs/$destdir/"
-            ssh -i /var/lib/jenkins/.ssh/id_rsa jenkins@beaker-project.org /srv/www/beaker-project.org/published.sh "Automatic\ commit\ by\ Jenkins\ job\ ${{JOB_NAME}}\ \#${{BUILD_NUMBER}}"
+            rsync -v -r -l --checksum --delete-after documentation/_build/html/ "jenkins@beaker-project.org:/srv/www/beaker-project.org/htdocs/$destdir/"
+            ssh jenkins@beaker-project.org /srv/www/beaker-project.org/published.sh "Automatic\ commit\ by\ Jenkins\ job\ ${{JOB_NAME}}\ \#${{BUILD_NUMBER}}"
         - critical-block-end
     publishers:
         - report-failures

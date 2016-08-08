@@ -5,6 +5,7 @@
         https://git.beaker-project.org/cgit/beaker-dev-docs/
         with the beaker-project.org Sphinx theme applied, and publishes them under
         https://beaker-project.org/dev/.
+    node: fedora
     scm:
         - git:
             url: git://git.beaker-project.org/beaker-project.org
@@ -37,6 +38,9 @@
         - exclusion:
             resources:
                 - htdocs
+        - ssh-agent-credentials:
+            users:
+                - '8f6d9af6-2faf-451a-86f5-ad433b0f9e9a'
     builders:
         - shell: |
             cd beaker-dev-docs/
@@ -44,14 +48,14 @@
             # In Sphinx 1.3 this can become -D html_theme_path=...
             echo "html_theme_path = ['../beaker-project.org/sphinx-theme']" >>conf.py
 
-            sphinx-1.0-build -W -b html -D html_theme=beaker . _build/html
+            sphinx-build -W -b html -D html_theme=beaker . _build/html
             rm -r _build/html/.doctrees
 
         - critical-block-start
         - shell: |
             cd beaker-dev-docs/
-            rsync -v -e 'ssh -i /var/lib/jenkins/.ssh/id_rsa' -r -l --checksum --delete-after _build/html/ jenkins@beaker-project.org:/srv/www/beaker-project.org/htdocs/dev/
-            ssh -i /var/lib/jenkins/.ssh/id_rsa jenkins@beaker-project.org /srv/www/beaker-project.org/published.sh "Automatic\ commit\ by\ Jenkins\ job\ ${JOB_NAME}\ \#${BUILD_NUMBER}"
+            rsync -v -r -l --checksum --delete-after _build/html/ jenkins@beaker-project.org:/srv/www/beaker-project.org/htdocs/dev/
+            ssh jenkins@beaker-project.org /srv/www/beaker-project.org/published.sh "Automatic\ commit\ by\ Jenkins\ job\ ${JOB_NAME}\ \#${BUILD_NUMBER}"
         - critical-block-end
     publishers:
         - report-failures
