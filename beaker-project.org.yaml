@@ -3,12 +3,13 @@
     description: |
         Builds all non-Sphinx web site content from 
         https://git.beaker-project.org/cgit/beaker-project.org/
-        (some static files, release tarballs, yum repos, and Beaker-in-a-box) 
+        (some static files, release tarballs, and yum repos)
         and publishes it to https://beaker-project.org/.
     auth-token: !include beaker-project.org-auth-token.txt
     properties:
         - priority-sorter:
             priority: 150
+    node: fedora
     scm:
         - git:
             url: git://git.beaker-project.org/beaker-project.org
@@ -36,6 +37,9 @@
         - exclusion:
             resources:
                 - htdocs
+        - ssh-agent-credentials:
+            users:
+                - '8f6d9af6-2faf-451a-86f5-ad433b0f9e9a'
     builders:
         - shell: |
             cd beaker-project.org/
@@ -45,8 +49,8 @@
         - critical-block-start
         - shell: |
             cd beaker-project.org/
-            rsync -v -e 'ssh -i /var/lib/jenkins/.ssh/id_rsa' -r -l --checksum --delete-after --exclude=.git\* --exclude=dev --exclude=docs --exclude=docs-\* ./ jenkins@beaker-project.org:/srv/www/beaker-project.org/htdocs/
-            ssh -i /var/lib/jenkins/.ssh/id_rsa jenkins@beaker-project.org /srv/www/beaker-project.org/published.sh "Automatic\ commit\ by\ Jenkins\ job\ ${JOB_NAME}\ \#${BUILD_NUMBER}"
+            rsync -v -r -l --checksum --delete-after --exclude=.git\* --exclude=dev --exclude=docs --exclude=docs-\* ./ jenkins@beaker-project.org:/srv/www/beaker-project.org/htdocs/
+            ssh jenkins@beaker-project.org /srv/www/beaker-project.org/published.sh "Automatic\ commit\ by\ Jenkins\ job\ ${JOB_NAME}\ \#${BUILD_NUMBER}"
         - critical-block-end
     publishers:
         - report-failures
