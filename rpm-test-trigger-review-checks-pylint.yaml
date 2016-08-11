@@ -1,0 +1,22 @@
+- job:
+    name: rpm-test-trigger-review-checks-pylint
+    description: |
+        Runs pylint on patches posted to Gerrit.
+    logrotate:
+        daysToKeep: 30
+    concurrent: true
+    node: fedora
+    scm: !include rpm-test-trigger-review-checks-scmconfig.yaml.inc
+    triggers: !include rpm-test-trigger-review-checks-triggerconfig.yaml.inc
+    builders:
+        - shell: |
+            set -o pipefail
+            pylint --reports=n --disable=I,R,C,W,E1101 rpmtesttrigger | tee pylint.out
+    publishers:
+        - archive:
+            artifacts: pylint.out
+    wrappers:
+        - publish-over-ssh-post-build:
+            site: "beaker-project.org jenkins-results"
+            source: "pylint.out"
+            target: "$JOB_NAME/$BUILD_NUMBER"

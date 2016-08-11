@@ -1,0 +1,24 @@
+- job:
+    name: rpm-test-trigger-review-checks-unittests
+    description: |
+      Runs all tests for rpm-test-trigger patches posted to Gerrit
+    node: fedora
+    scm: !include rpm-test-trigger-review-checks-scmconfig.yaml.inc
+    triggers: !include rpm-test-trigger-review-checks-triggerconfig.yaml.inc
+    builders:
+        - shell: |
+            set -o pipefail
+            mkdir -p $(pwd)/buildroot
+            python2 setup.py install --root=$(pwd)/buildroot
+            PYTHONPATH=$(pwd)/buildroot/usr/lib/python2.7/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
+                py.test-2 -s -vv --full-trace --durations=10 --junit-xml=junit-unit.xml ./ 2>&1 | tee tests.out
+    publishers:
+        - archive:
+            artifacts: tests.out
+        - junit:
+            results: junit-*.xml
+    wrappers:
+        - publish-over-ssh-post-build:
+            site: "beaker-project.org jenkins-results"
+            source: "tests.out junit-*.xml"
+            target: "$JOB_NAME/$BUILD_NUMBER"
