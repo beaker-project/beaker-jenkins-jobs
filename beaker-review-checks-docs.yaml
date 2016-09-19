@@ -7,7 +7,10 @@
     concurrent: true
     node: fedora
     scm: !include beaker-review-checks-scmconfig.yaml.inc
-    triggers: !include beaker-review-checks-triggerconfig.yaml.inc
+    triggers:
+        - beaker-review-checks-gerrit-trigger:
+            file_paths_pattern: ".*"
+            dependency_jobs: ""
     builders:
         - shell: |
             make -C documentation html SPHINXOPTS="-W"

@@ -6,7 +6,10 @@
         daysToKeep: 30
     concurrent: true
     scm: !include beaker-review-checks-scmconfig.yaml.inc
-    triggers: !include beaker-review-checks-triggerconfig-onlycode.yaml.inc
+    triggers:
+        - beaker-review-checks-gerrit-trigger:
+            file_paths_pattern: "^(Server/|Client/|LabController/|Common/|IntegrationTests/).*"
+            dependency_jobs: "beaker-review-checks-rpms-{distro},beaker-review-checks-pylint"
     builders:
         - shell: |
             export BEAKER_CLIENT_CONF=/etc/beaker/client-devel.conf

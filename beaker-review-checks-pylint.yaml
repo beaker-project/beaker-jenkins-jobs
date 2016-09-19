@@ -7,7 +7,10 @@
     concurrent: true
     node: fedora
     scm: !include beaker-review-checks-scmconfig.yaml.inc
-    triggers: !include beaker-review-checks-triggerconfig-onlycode.yaml.inc
+    triggers:
+        - beaker-review-checks-gerrit-trigger:
+            file_paths_pattern: "^(Server/|Client/|LabController/|Common/|IntegrationTests/).*"
+            dependency_jobs: ""
     builders:
         - shell: |
             set -o pipefail
