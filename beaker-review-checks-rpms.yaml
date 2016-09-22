@@ -28,7 +28,8 @@
     wrappers:
         - publish-over-ssh-post-build:
             site: "beaker-project.org jenkins-results"
-            source: "mock-result/**"
+            # excluding .src.rpm to save a bit of space
+            source: "mock-result/*.log mock-result/*.noarch.rpm"
             target: "$JOB_NAME/$BUILD_NUMBER"
 
 - project:
