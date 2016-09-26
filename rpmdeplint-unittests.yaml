@@ -1,7 +1,7 @@
-- job:
-    name: rpmdeplint-unittests
-    description: "Run all tests for rpmdeplint against HEAD"
-    node: fedora
+- job-template:
+    name: rpmdeplint-unittests-{distro}
+    description: "Run all tests for rpmdeplint master branch on {distro}."
+    node: "{node}"
     scm:
         - git:
             url: git://git.beaker-project.org/rpmdeplint
@@ -14,22 +14,17 @@
     triggers:
         - pollscm: "H/5 * * * *"
     builders:
-        - shell: |
-            set -o pipefail
-            mkdir -p $(pwd)/buildroot
-            python2 setup.py install --root=$(pwd)/buildroot
-            PYTHONPATH=$(pwd)/buildroot/usr/lib/python2.7/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
-                py.test-2 -s -vv --full-trace --durations=10 --junit-xml=junit-unit.xml rpmdeplint 2>&1 | tee tests.out
-            PYTHONPATH=$(pwd)/buildroot/usr/lib/python2.7/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
-                py.test-2 -s -vv --full-trace --durations=10 --junit-xml=junit-accept.xml acceptance_tests 2>&1 | tee --append tests.out
-            python3 setup.py install --root=$(pwd)/buildroot
-            PYTHONPATH=$(pwd)/buildroot/usr/lib/python3.4/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
-                py.test-3 -s -vv --full-trace --durations=10 --junit-xml=junit-unit.xml rpmdeplint 2>&1 | tee --append tests.out
-            PYTHONPATH=$(pwd)/buildroot/usr/lib/python3.4/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
-                py.test-3 -s -vv --full-trace --durations=10 --junit-xml=junit-accept.xml acceptance_tests 2>&1 | tee --append tests.out
+        - rpmdeplint-run-tests:
+            has_python3: "{has_python3}"
     publishers:
         - report-failures
         - archive:
             artifacts: tests.out
         - junit:
             results: junit-*.xml
+
+- project:
+    name: rpmdeplint-unittests
+    distro: !include rpmdeplint-distroconfig.yaml.inc
+    jobs:
+        - rpmdeplint-unittests-{distro}

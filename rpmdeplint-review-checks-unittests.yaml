@@ -1,24 +1,13 @@
-- job:
-    name: rpmdeplint-review-checks-unittests
+- job-template:
+    name: rpmdeplint-review-checks-unittests-{distro}
     description: |
-      Runs all tests for rpmdeplint patches posted to Gerrit
-    node: fedora
+      Runs all tests for rpmdeplint on {distro} for patches posted to Gerrit.
+    node: "{node}"
     scm: !include rpmdeplint-review-checks-scmconfig.yaml.inc
     triggers: !include rpmdeplint-review-checks-triggerconfig.yaml.inc
     builders:
-        - shell: |
-            set -o pipefail
-            mkdir -p $(pwd)/buildroot
-            python2 setup.py install --root=$(pwd)/buildroot
-            PYTHONPATH=$(pwd)/buildroot/usr/lib/python2.7/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
-                py.test-2 -s -vv --full-trace --durations=10 --junit-xml=junit-unit.xml rpmdeplint 2>&1 | tee tests.out
-            PYTHONPATH=$(pwd)/buildroot/usr/lib/python2.7/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
-                py.test-2 -s -vv --full-trace --durations=10 --junit-xml=junit-accept.xml acceptance_tests 2>&1 | tee --append tests.out
-            python3 setup.py install --root=$(pwd)/buildroot
-            PYTHONPATH=$(pwd)/buildroot/usr/lib/python3.4/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
-                py.test-3 -s -vv --full-trace --durations=10 --junit-xml=junit-unit.xml rpmdeplint 2>&1 | tee --append tests.out
-            PYTHONPATH=$(pwd)/buildroot/usr/lib/python3.4/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
-                py.test-3 -s -vv --full-trace --durations=10 --junit-xml=junit-accept.xml acceptance_tests 2>&1 | tee --append tests.out
+        - rpmdeplint-run-tests:
+            has_python3: "{has_python3}"
     publishers:
         - archive:
             artifacts: tests.out
@@ -29,3 +18,9 @@
             site: "beaker-project.org jenkins-results"
             source: "tests.out junit-*.xml"
             target: "$JOB_NAME/$BUILD_NUMBER"
+
+- project:
+    name: rpmdeplint-review-checks-unittests
+    distro: !include rpmdeplint-distroconfig.yaml.inc
+    jobs:
+        - rpmdeplint-review-checks-unittests-{distro}
