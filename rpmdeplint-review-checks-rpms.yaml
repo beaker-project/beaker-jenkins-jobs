@@ -1,0 +1,44 @@
+- job-template:
+    name: rpmdeplint-review-checks-rpms-{distro}
+    description: |
+        Builds RPMs for patches posted to Gerrit.
+    logrotate:
+        daysToKeep: 30
+    concurrent: true
+    node: fedora
+    scm: !include rpmdeplint-review-checks-scmconfig.yaml.inc
+    triggers: !include rpmdeplint-review-checks-triggerconfig.yaml.inc
+    builders:
+        - shell: |
+            ./rpmbuild.sh -bs
+        - shell: |
+            : ${{XDG_RUNTIME_DIR:=/run/user/$(id -u)}}
+            mkdir -p mock-result
+            flock $XDG_RUNTIME_DIR/beaker-jenkins-mock-flock-{mockconfig} /usr/bin/mock --resultdir=mock-result -r {mockconfig} --clean --rebuild rpmbuild-output/*.src.rpm
+        #- shell: |
+        #    rpmlint -f Misc/rpmlint-config.py -o "NetworkEnabled False" mock-result/*.rpm
+    publishers:
+        - archive:
+            artifacts: mock-result/**
+    wrappers:
+        - publish-over-ssh-post-build:
+            site: "beaker-project.org jenkins-results"
+            # excluding .src.rpm to save a bit of space
+            source: "mock-result/*.log mock-result/*.noarch.rpm"
+            target: "$JOB_NAME/$BUILD_NUMBER"
+
+- project:
+    name: rpmdeplint-review-checks-rpms
+    distro:
+        - Fedorarawhide:
+            mockconfig: fedora-rawhide-x86_64
+        - Fedora25:
+            mockconfig: fedora-25-x86_64
+        - Fedora24:
+            mockconfig: fedora-24-x86_64
+        - Fedora23:
+            mockconfig: fedora-23-x86_64
+        - RedHatEnterpriseLinux7:
+            mockconfig: epel-7-x86_64
+    jobs:
+        - rpmdeplint-review-checks-rpms-{distro}
