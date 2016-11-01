@@ -10,6 +10,15 @@
         - beaker-review-checks-gerrit-trigger:
             file_paths_pattern: "^(Server/|Client/|LabController/|Common/|IntegrationTests/).*"
             dependency_jobs: "beaker-review-checks-rpms-{distro},beaker-review-checks-pylint"
+    properties:
+        - inject:
+            groovy-content: |
+                import com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.GerritCause
+                def gerritCause = currentBuild.getCause(GerritCause)
+                if (gerritCause != null) {{
+                    def rpmJobTriggered = gerritCause.context.others.find {{ it.projectId == 'beaker-review-checks-rpms-{distro}' }}
+                    return [RPM_BUILD_NUMBER: rpmJobTriggered.buildNumber]
+                }}
     builders:
         - shell: |
             export BEAKER_CLIENT_CONF=/etc/beaker/client-devel.conf
@@ -23,6 +32,7 @@
                         <repos>
                             {extrarepos}
                             <repo name="beaker-project-server" url="https://beaker-project.org/yum/server-testing/{distro}/" />
+                            <repo name="beaker-gitbuild" url="https://beaker-project.org/jenkins-results/beaker-review-checks-rpms-{distro}/$RPM_BUILD_NUMBER/mock-result/" />
                             <!-- harness repo is needed so that rhts-test-env and rhts-python versions match -->
                             <repo name="beaker-project-harness" url="https://beaker-project.org/yum/harness-testing/{distro}/" />
                             <!-- for beaker-server-redhat -->
@@ -53,11 +63,7 @@
                             <params>
                                 <param name="RHTS_OPTION_COMPATIBLE" value=""/>
                                 <param name="RHTS_OPTION_COMPAT_SERVICE" value=""/>
-                                <param name="SOURCE" value="_git"/>
-                                <param name="BEAKER_GIT_REF" value="$GERRIT_BRANCH"/>
-                                <param name="BEAKER_GIT_REMOTE" value="https://gerrit.beaker-project.org/p/beaker"/>
-                                <param name="BEAKER_GIT_REMOTE_REF" value="$GERRIT_REFSPEC"/>
-                                <param name="BEAKER_GIT_REMOTE_MERGE" value="merge"/>
+                                <param name="SOURCE" value="_repo"/>
                                 <param name="MYSQL_EXTRA_CONFIG" value="innodb-flush-log-at-trx-commit = 2"/>
                             </params>
                         </task>
@@ -66,7 +72,7 @@
                                 <param name="RHTS_OPTION_COMPATIBLE" value=""/>
                                 <param name="RHTS_OPTION_COMPAT_SERVICE" value=""/>
                                 <param name="BEAKER_SKIP_INIT_DB" value=""/>
-                                <param name="SOURCE" value="_git"/>
+                                <param name="SOURCE" value="_repo"/>
                                 <param name="PACKAGES_TO_TEST" value="bkr.inttest bkr.redhat"/>
                             </params>
                         </task>

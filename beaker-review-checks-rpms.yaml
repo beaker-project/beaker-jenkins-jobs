@@ -22,14 +22,16 @@
             if [ -f Misc/rpmlint-config.py ] ; then # since Beaker 22
                 rpmlint -f Misc/rpmlint-config.py -o "NetworkEnabled False" mock-result/*.rpm
             fi
+        - shell: |
+            createrepo_c --no-database mock-result
     publishers:
         - archive:
-            artifacts: mock-result/**
+            artifacts: "mock-result/*.log,mock-result/*.rpm"
     wrappers:
         - publish-over-ssh-post-build:
             site: "beaker-project.org jenkins-results"
             # excluding .src.rpm to save a bit of space
-            source: "mock-result/*.log mock-result/*.noarch.rpm"
+            source: "mock-result/*.log mock-result/*.noarch.rpm mock-result/repodata/**"
             target: "$JOB_NAME/$BUILD_NUMBER"
 
 - project:
