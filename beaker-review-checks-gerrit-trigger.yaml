@@ -20,3 +20,5 @@
             escape-quotes: false
             silent-start: true
             dependency-jobs: "{dependency_jobs}"
+            skip-vote:
+                failed: {ignorefail}

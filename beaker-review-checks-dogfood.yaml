@@ -10,6 +10,7 @@
         - beaker-review-checks-gerrit-trigger:
             file_paths_pattern: "^(Server/|Client/|LabController/|Common/|IntegrationTests/).*"
             dependency_jobs: "beaker-review-checks-rpms-{distro},beaker-review-checks-pylint"
+            ignorefail: False
     properties:
         - inject:
             groovy-content: |

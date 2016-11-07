@@ -11,6 +11,7 @@
         - beaker-review-checks-gerrit-trigger:
             file_paths_pattern: ".*"
             dependency_jobs: ""
+            ignorefail: False
     builders:
         - shell: |
             make -C documentation html SPHINXOPTS="-W"
