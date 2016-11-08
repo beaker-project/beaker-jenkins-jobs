@@ -36,6 +36,7 @@
                 --repo=rhel6,http://cdn.rcm-internal.redhat.com/content/dist/rhel/server/6/6Server/x86_64/os/ \
                 --repo=rhel6-optional,http://cdn.rcm-internal.redhat.com/content/dist/rhel/server/6/6Server/x86_64/optional/os/ \
                 --repo=beaker-server-rhel6,https://beaker-project.org/yum/server/RedHatEnterpriseLinux6/ \
+                --arch=x86_64 \
                 *.rpm
     publishers:
         - report-failures
