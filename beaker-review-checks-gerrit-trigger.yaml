@@ -21,4 +21,4 @@
             silent-start: true
             dependency-jobs: "{dependency_jobs}"
             skip-vote:
-                failed: {ignorefail}
+                failed: "{ignorefail}"

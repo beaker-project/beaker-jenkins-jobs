@@ -17,4 +17,4 @@
             escape-quotes: false
             silent-start: true
             skip-vote:
-                failed: {ignorefail}
+                failed: "{ignorefail}"

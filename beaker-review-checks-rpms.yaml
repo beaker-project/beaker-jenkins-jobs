@@ -11,7 +11,7 @@
         - beaker-review-checks-gerrit-trigger:
             file_paths_pattern: ".*"
             dependency_jobs: ""
-            ignorefail: {ignorefail}
+            ignorefail: "{ignorefail}"
     builders:
         - shell: |
             Misc/rpmbuild.sh --next-major -bs

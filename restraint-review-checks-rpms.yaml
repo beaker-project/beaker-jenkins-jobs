@@ -8,7 +8,7 @@
     scm: !include restraint-review-checks-scmconfig.yaml.inc
     triggers:
         - restraint-review-checks-gerrit-trigger:
-            ignorefail: {ignorefail}
+            ignorefail: "{ignorefail}"
     builders:
         - restraint-fetch-tarballs
         - shell: |

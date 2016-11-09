@@ -11,7 +11,7 @@
         - beaker-review-checks-gerrit-trigger:
             file_paths_pattern: "^(Server/|Client/|LabController/|Common/|IntegrationTests/).*"
             dependency_jobs: ""
-            ignorefail: False
+            ignorefail: ""
     builders:
         - shell: |
             set -o pipefail

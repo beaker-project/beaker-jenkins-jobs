@@ -1,32 +1,32 @@
 - Fedorarawhide:
     dist: .fc26
     kojitag: beaker-harness-fedora-rawhide
-    ignorefail: True
+    ignorefail: "1"
 - Fedora25:
     dist: .fc25
     kojitag: beaker-harness-fedora-25
-    ignorefail: False
+    ignorefail: ""
 - Fedora24:
     dist: .fc24
     kojitag: beaker-harness-fedora-24
-    ignorefail: False
+    ignorefail: ""
 - Fedora23:
     dist: .fc23
     kojitag: beaker-harness-fedora-23
-    ignorefail: False
+    ignorefail: ""
 - RedHatEnterpriseLinux7:
     dist: .el7_2
     kojitag: beaker-harness-rhel-7
-    ignorefail: False
+    ignorefail: ""
 - RedHatEnterpriseLinux6:
     dist: .el6
     kojitag: beaker-harness-rhel-6
-    ignorefail: False
+    ignorefail: ""
 - RedHatEnterpriseLinux5:
     dist: .el5_9
     kojitag: beaker-harness-rhel-5
-    ignorefail: False
+    ignorefail: ""
 - RedHatEnterpriseLinux4:
     dist: .el4_8
     kojitag: beaker-harness-rhel-4
-    ignorefail: False
+    ignorefail: ""
