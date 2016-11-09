@@ -7,12 +7,14 @@
             url: git://git.beaker-project.org/rpmdeplint
             branches:
                 - origin/master
-            clean: true
+            clean:
+                before: true
             wipe-workspace: false
             skip-tag: true
             reference-repo: /var/lib/jenkins/gitreference/rpmdeplint
     triggers:
-        - pollscm: "H/5 * * * *"
+        - pollscm:
+            cron: "H/5 * * * *"
     builders:
         - rpmdeplint-run-tests:
             has_python3: "{has_python3}"
@@ -25,6 +27,6 @@
 
 - project:
     name: rpmdeplint-unittests
-    distro: !include rpmdeplint-distroconfig.yaml.inc
+    distro: !include: rpmdeplint-distroconfig.yaml.inc
     jobs:
         - rpmdeplint-unittests-{distro}

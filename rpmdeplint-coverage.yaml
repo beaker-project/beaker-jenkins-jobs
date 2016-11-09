@@ -7,12 +7,14 @@
             url: git://git.beaker-project.org/rpmdeplint
             branches:
                 - origin/master
-            clean: true
+            clean:
+                before: true
             wipe-workspace: false
             skip-tag: true
             reference-repo: /var/lib/jenkins/gitreference/rpmdeplint
     triggers:
-        - pollscm: "H/5 * * * *"
+        - pollscm:
+            cron: "H/5 * * * *"
     builders:
         - shell: |
             python setup.py test --addopts --cov=rpmdeplint 

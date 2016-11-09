@@ -5,7 +5,7 @@
     logrotate:
         daysToKeep: 30
     concurrent: true
-    scm: !include beaker-review-checks-scmconfig.yaml.inc
+    scm: !include: beaker-review-checks-scmconfig.yaml.inc
     triggers:
         - beaker-review-checks-gerrit-trigger:
             file_paths_pattern: "^(Server/|Client/|LabController/|Common/|IntegrationTests/).*"
@@ -115,6 +115,6 @@
 
 - project:
     name: beaker-review-checks-dogfood
-    distro: !include beaker-dogfood-distroconfig.yaml.inc
+    distro: !include: beaker-dogfood-distroconfig.yaml.inc
     jobs:
         - beaker-review-checks-dogfood-{distro}

@@ -6,7 +6,7 @@
         daysToKeep: 30
     concurrent: true
     node: fedora
-    scm: !include beaker-review-checks-scmconfig.yaml.inc
+    scm: !include: beaker-review-checks-scmconfig.yaml.inc
     triggers:
         - beaker-review-checks-gerrit-trigger:
             file_paths_pattern: ".*"

@@ -5,7 +5,7 @@
         https://git.beaker-project.org/cgit/beaker-project.org/
         (some static files, release tarballs, and yum repos)
         and publishes it to https://beaker-project.org/.
-    auth-token: !include beaker-project.org-auth-token.txt
+    auth-token: !include: beaker-project.org-auth-token.txt
     properties:
         - priority-sorter:
             priority: 150

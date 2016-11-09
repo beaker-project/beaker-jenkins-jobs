@@ -5,7 +5,7 @@
     logrotate:
         daysToKeep: 30
     concurrent: true
-    scm: !include restraint-review-checks-scmconfig.yaml.inc
+    scm: !include: restraint-review-checks-scmconfig.yaml.inc
     triggers:
         - restraint-review-checks-gerrit-trigger:
             ignorefail: "{ignorefail}"
@@ -37,6 +37,6 @@
 
 - project:
     name: restraint-review-checks-rpms
-    distro: !include restraint-rpms-distroconfig.yaml.inc
+    distro: !include: restraint-rpms-distroconfig.yaml.inc
     jobs:
         - restraint-review-checks-rpms-{distro}

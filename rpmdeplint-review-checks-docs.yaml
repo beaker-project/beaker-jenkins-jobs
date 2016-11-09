@@ -6,8 +6,8 @@
         daysToKeep: 30
     concurrent: true
     node: fedora
-    scm: !include rpmdeplint-review-checks-scmconfig.yaml.inc
-    triggers: !include rpmdeplint-review-checks-triggerconfig.yaml.inc
+    scm: !include: rpmdeplint-review-checks-scmconfig.yaml.inc
+    triggers: !include: rpmdeplint-review-checks-triggerconfig.yaml.inc
     builders:
         - shell: |
             set -o pipefail

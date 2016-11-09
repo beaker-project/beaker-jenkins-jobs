@@ -3,8 +3,8 @@
     description: |
       Runs all tests for rpmdeplint on {distro} for patches posted to Gerrit.
     node: "{node}"
-    scm: !include rpmdeplint-review-checks-scmconfig.yaml.inc
-    triggers: !include rpmdeplint-review-checks-triggerconfig.yaml.inc
+    scm: !include: rpmdeplint-review-checks-scmconfig.yaml.inc
+    triggers: !include: rpmdeplint-review-checks-triggerconfig.yaml.inc
     builders:
         - rpmdeplint-run-tests:
             has_python3: "{has_python3}"
@@ -21,6 +21,6 @@
 
 - project:
     name: rpmdeplint-review-checks-unittests
-    distro: !include rpmdeplint-distroconfig.yaml.inc
+    distro: !include: rpmdeplint-distroconfig.yaml.inc
     jobs:
         - rpmdeplint-review-checks-unittests-{distro}

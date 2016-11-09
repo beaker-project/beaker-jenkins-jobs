@@ -35,6 +35,6 @@
 
 - project:
     name: restraint-rpms
-    distro: !include restraint-rpms-distroconfig.yaml.inc
+    distro: !include: restraint-rpms-distroconfig.yaml.inc
     jobs:
         - "restraint-rpms-{distro}"

@@ -60,6 +60,6 @@
 
 - project:
     name: beaker-rpms
-    distro: !include beaker-rpms-distroconfig.yaml.inc
+    distro: !include: beaker-rpms-distroconfig.yaml.inc
     jobs:
         - beaker-rpms-{distro}
