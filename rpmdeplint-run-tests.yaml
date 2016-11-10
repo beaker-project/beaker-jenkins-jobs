@@ -3,16 +3,24 @@
     builders:
     - shell: |
         set -o pipefail
-        mkdir -p $(pwd)/buildroot
-        python2 setup.py install --root=$(pwd)/buildroot
-        PYTHONPATH=$(pwd)/buildroot/usr/lib/python2.7/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
+        BUILDROOT=$(pwd)/buildroot
+        mkdir -p $BUILDROOT
+        python2 setup.py install --root=$BUILDROOT
+        BUILDROOT_BINDIR=$BUILDROOT/usr/bin
+        BUILDROOT_PYTHONSITEDIR=$(echo $BUILDROOT/usr/lib/python2.*/site-packages)
+        test -x $BUILDROOT_BINDIR/rpmdeplint
+        test -d $BUILDROOT_PYTHONSITEDIR
+        PYTHONPATH=$BUILDROOT_PYTHONSITEDIR PATH=$BUILDROOT_BINDIR:$PATH \
             py.test -s -vv --full-trace --durations=10 --junit-xml=junit-unit-py2.xml rpmdeplint 2>&1 | tee tests.out
-        PYTHONPATH=$(pwd)/buildroot/usr/lib/python2.7/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
+        PYTHONPATH=$BUILDROOT_PYTHONSITEDIR PATH=$BUILDROOT_BINDIR:$PATH \
             py.test -s -vv --full-trace --durations=10 --junit-xml=junit-accept-py2.xml acceptance_tests 2>&1 | tee --append tests.out
         if {has_python3} ; then
-            python3 setup.py install --root=$(pwd)/buildroot
-            PYTHONPATH=$(pwd)/buildroot/usr/lib/python3.4/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
+            python3 setup.py install --root=$BUILDROOT
+            BUILDROOT_PYTHON3SITEDIR=$(echo $BUILDROOT/usr/lib/python3.*/site-packages)
+            test -x $BUILDROOT_BINDIR/rpmdeplint
+            test -d $BUILDROOT_PYTHON3SITEDIR
+            PYTHONPATH=$BUILDROOT_PYTHON3SITEDIR PATH=$BUILDROOT_BINDIR:$PATH \
                 py.test-3 -s -vv --full-trace --durations=10 --junit-xml=junit-unit-py3.xml rpmdeplint 2>&1 | tee --append tests.out
-            PYTHONPATH=$(pwd)/buildroot/usr/lib/python3.4/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
+            PYTHONPATH=$BUILDROOT_PYTHON3SITEDIR PATH=$BUILDROOT_BINDIR:$PATH \
                 py.test-3 -s -vv --full-trace --durations=10 --junit-xml=junit-accept-py3.xml acceptance_tests 2>&1 | tee --append tests.out
         fi
