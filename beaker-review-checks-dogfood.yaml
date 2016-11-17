@@ -64,7 +64,7 @@
                             <params>
                                 <param name="RHTS_OPTION_COMPATIBLE" value=""/>
                                 <param name="RHTS_OPTION_COMPAT_SERVICE" value=""/>
-                                <param name="SOURCE" value="_repo"/>
+                                <param name="EXPECT_BEAKER_GIT_BUILD" value="1"/>
                                 <param name="MYSQL_EXTRA_CONFIG" value="innodb-flush-log-at-trx-commit = 2"/>
                             </params>
                         </task>
@@ -73,7 +73,7 @@
                                 <param name="RHTS_OPTION_COMPATIBLE" value=""/>
                                 <param name="RHTS_OPTION_COMPAT_SERVICE" value=""/>
                                 <param name="BEAKER_SKIP_INIT_DB" value=""/>
-                                <param name="SOURCE" value="_repo"/>
+                                <param name="EXPECT_BEAKER_GIT_BUILD" value="1"/>
                                 <param name="PACKAGES_TO_TEST" value="bkr.inttest bkr.redhat"/>
                             </params>
                         </task>
