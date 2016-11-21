@@ -1,0 +1,67 @@
+- job-template:
+    name: beaker-in-a-box-tests-{distro}
+    description: |
+        Runs Beaker-in-a-box ansible playbook inside Beaker, for patches merged to master.
+    logrotate:
+        daysToKeep: 30
+    concurrent: true
+    scm:
+        - git:
+            url: git://git.beaker-project.org/beaker-in-a-box/
+            branches:
+                - origin/master
+            clean:
+                before: true
+            wipe-workspace: false
+            skip-tag: true
+            reference-repo: /var/lib/jenkins/gitreference/beaker-in-a-box
+    triggers:
+        - pollscm:
+            cron: "H/5 * * * *"
+
+    builders:
+        - shell: |
+            export BEAKER_CLIENT_CONF=/etc/beaker/client-devel.conf
+            job_submit_output=$(bkr job-submit - <<EOF
+            <job group="beakerdevs" retention_tag="scratch">
+                <whiteboard>$JOB_NAME #$BUILD_NUMBER</whiteboard>
+                <recipeSet priority="Medium">
+                    <recipe whiteboard="Beaker In A Box Playbook Test">
+                        <repos />
+                        <packages/>
+                        <distroRequires>
+                            <distro_arch op="=" value="x86_64" />
+                            <distro_variant op="=" value="Server" />
+                            <family op="=" value="{distro}"/>
+                        </distroRequires>
+                        <hostRequires>
+                            <system_type value="Machine"/>
+                            <key_value key="HVM" op="=" value="1" />
+                        </hostRequires>
+                        <partitions/>
+                        <task name="/distribution/install" role="STANDALONE" />
+                        <task name="/distribution/beaker/beaker-in-a-box" role="STANDALONE" />
+                    </recipe>
+                </recipeSet>
+            </job>
+            EOF
+            )
+            jobid=$(echo $job_submit_output | awk -F\' '{{print $2}}')
+
+            bkr job-watch $jobid || :
+
+            mkdir -p beaker/$jobid
+            bkr job-results --prettyxml $jobid >beaker/$jobid/results.xml
+
+            jobresult=$(xmlstarlet sel -t -v 'concat(/job/@status, "/", /job/@result)' <beaker/$jobid/results.xml)
+            if [[ "$jobresult" != "Completed/Pass" ]] ; then
+                exit 1
+            fi
+
+- project:
+    name: beaker-in-a-box-tests
+    distro:
+        - Fedora24
+        - Fedora23
+    jobs:
+        - beaker-in-a-box-tests-{distro}
