@@ -10,4 +10,4 @@
         - comment-added-event:
             approval-category: Ready-for-Checks
             approval-value: 1
-    custom-url: "https://beaker-project.org/jenkins-results/${JOB_NAME}/${BUILD_NUMBER}/"
+    custom-url: "https://beaker-project.org/jenkins-results/$JOB_NAME/$BUILD_NUMBER/"

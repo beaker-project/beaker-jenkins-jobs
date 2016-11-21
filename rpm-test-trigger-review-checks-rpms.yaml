@@ -1,0 +1,38 @@
+- job-template:
+    name: rpm-test-trigger-review-checks-rpms-{distro}
+    description: |
+        Builds RPMs for patches posted to Gerrit.
+    logrotate:
+        daysToKeep: 30
+    concurrent: true
+    node: fedora
+    scm: !include rpm-test-trigger-review-checks-scmconfig.yaml.inc
+    triggers: !include rpm-test-trigger-review-checks-triggerconfig.yaml.inc
+    builders:
+        - shell: |
+            ./rpmbuild.sh -bs
+        - shell: |
+            : ${{XDG_RUNTIME_DIR:=/run/user/$(id -u)}}
+            mkdir -p mock-result
+            flock $XDG_RUNTIME_DIR/beaker-jenkins-mock-flock-{mockconfig} /usr/bin/mock --resultdir=mock-result -r {mockconfig} --clean --rebuild rpmbuild-output/*.src.rpm
+        # - shell: |
+        #    rpmlint -f mock-result/*.rpm
+    publishers:
+        - archive:
+            artifacts: mock-result/**
+    wrappers:
+        - publish-over-ssh-post-build:
+            site: "beaker-project.org jenkins-results"
+            # excluding .src.rpm to save a bit of space
+            source: "mock-result/*.log mock-result/*.noarch.rpm"
+            target: "$JOB_NAME/$BUILD_NUMBER"
+
+- project:
+    name: rpm-test-trigger-review-checks-rpms
+    distro:
+        - RedHatEnterpriseLinux7:
+            # Temporarily using epel-7 instead of sed-rhel-7 due to:
+            # https://projects.engineering.redhat.com/browse/RCM-2442?focusedCommentId=404182&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-404182
+            mockconfig: epel-7-x86_64
+    jobs:
+        - rpm-test-trigger-review-checks-rpms-{distro}
