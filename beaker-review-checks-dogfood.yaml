@@ -41,6 +41,10 @@
                         </repos>
                         <packages>
                             <package name="-prelink" />
+                            <package name="python-keystoneclient" />
+                            <package name="python-novaclient" />
+                            <package name="python-glanceclient" />
+                            <package name="python-neutronclient" />
                             <package name="beaker-server-redhat" />
                         </packages>
                         <distroRequires>
@@ -66,6 +70,9 @@
                                 <param name="RHTS_OPTION_COMPAT_SERVICE" value=""/>
                                 <param name="EXPECT_BEAKER_GIT_BUILD" value="1"/>
                                 <param name="MYSQL_EXTRA_CONFIG" value="innodb-flush-log-at-trx-commit = 2"/>
+                                <param name="OPENSTACK_IDENTITY_API_URL" value="http://dashboard.centralci.eng.rdu2.redhat.com:5000/v3"/>
+                                <param name="OPENSTACK_BEAKER_USERNAME" value="$OPENSTACK_BEAKER_USERNAME"/>
+                                <param name="OPENSTACK_BEAKER_PASSWORD" value="$OPENSTACK_BEAKER_PASSWORD"/>
                             </params>
                         </task>
                         <task name="/distribution/beaker/dogfood" role="STANDALONE">
@@ -75,6 +82,9 @@
                                 <param name="BEAKER_SKIP_INIT_DB" value=""/>
                                 <param name="EXPECT_BEAKER_GIT_BUILD" value="1"/>
                                 <param name="PACKAGES_TO_TEST" value="bkr.inttest bkr.redhat"/>
+                                <param name="OPENSTACK_DUMMY_USERNAME" value="$OPENSTACK_DUMMY_USERNAME"/>
+                                <param name="OPENSTACK_DUMMY_PASSWORD" value="$OPENSTACK_DUMMY_PASSWORD"/>
+                                <param name="OPENSTACK_DUMMY_PROJECT_NAME" value="beaker-jenkins"/>
                             </params>
                         </task>
                     </recipe>
@@ -108,6 +118,15 @@
         - junit:
             results: beaker/*/junit.xml
     wrappers:
+        - credentials-binding:
+            - username-password-separated:
+                credential-id: "2d19002d-5d84-4448-858e-bf76a5175eac"
+                username: OPENSTACK_BEAKER_USERNAME
+                password: OPENSTACK_BEAKER_PASSWORD
+            - username-password-separated:
+                credential-id: "df01f050-b351-4738-8c1b-39069a85dcc5"
+                username: OPENSTACK_DUMMY_USERNAME
+                password: OPENSTACK_DUMMY_PASSWORD
         - publish-over-ssh-post-build:
             site: "beaker-project.org jenkins-results"
             source: "beaker/**"
