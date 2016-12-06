@@ -11,7 +11,12 @@
     builders:
         - shell: |
             set -o pipefail
-            pylint --reports=n --disable=I,R,C,W,E1101 rpmtesttrigger | tee pylint.out
+            if grep -qF 'Programming Language :: Python :: 3 :: Only' setup.py ; then
+                PYLINTCMD=python3-pylint
+            else
+                PYLINTCMD=pylint
+            fi
+            $PYLINTCMD --reports=n --disable=I,R,C,W,E1101 rpmtesttrigger | tee pylint.out
     publishers:
         - archive:
             artifacts: pylint.out

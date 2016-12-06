@@ -8,10 +8,20 @@
     builders:
         - shell: |
             set -o pipefail
-            mkdir -p $(pwd)/buildroot
-            python2 setup.py install --root=$(pwd)/buildroot
-            PYTHONPATH=$(pwd)/buildroot/usr/lib/python2.7/site-packages PATH=$(pwd)/buildroot/usr/bin:$PATH \
-                py.test-2 -s -vv --full-trace --durations=10 --junit-xml=junit-unit.xml ./ 2>&1 | tee tests.out
+            if grep -qF 'Programming Language :: Python :: 3 :: Only' setup.py ; then
+                PYVER=3
+            else
+                PYVER=2
+            fi
+            BUILDROOT=$(pwd)/buildroot
+            mkdir -p $BUILDROOT
+            python$PYVER setup.py install --root=$BUILDROOT
+            BUILDROOT_BINDIR=$BUILDROOT/usr/bin
+            BUILDROOT_PYTHONSITEDIR=$(echo $BUILDROOT/usr/lib/python$PYVER.*/site-packages)
+            test -x $BUILDROOT_BINDIR/rpm-test-trigger
+            test -d $BUILDROOT_PYTHONSITEDIR/rpmtesttrigger
+            PYTHONPATH=$BUILDROOT_PYTHONSITEDIR PATH=$BUILDROOT_BINDIR:$PATH \
+                py.test-$PYVER -s -vv --full-trace --durations=10 --junit-xml=junit-unit.xml rpmtesttrigger 2>&1 | tee tests.out
     publishers:
         - archive:
             artifacts: tests.out
