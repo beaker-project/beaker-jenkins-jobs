@@ -31,9 +31,7 @@
     name: rpm-test-trigger-review-checks-rpms
     distro:
         - RedHatEnterpriseLinux7:
-            # Temporarily using epel-7 instead of sed-rhel-7 due to:
-            # https://projects.engineering.redhat.com/browse/RCM-2442?focusedCommentId=404182&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-404182
-            mockconfig: epel-7-x86_64
+            mockconfig: sed-rhel-7-x86_64
         - Fedora25:
             mockconfig: fedora-25-x86_64
     jobs:
