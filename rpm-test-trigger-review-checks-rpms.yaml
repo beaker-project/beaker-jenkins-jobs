@@ -30,8 +30,6 @@
 - project:
     name: rpm-test-trigger-review-checks-rpms
     distro:
-        - RedHatEnterpriseLinux7:
-            mockconfig: sed-rhel-7-x86_64
         - Fedora25:
             mockconfig: fedora-25-x86_64
     jobs:
