@@ -1,0 +1,9 @@
+Ready-for-Checks+1: Tyrone Abdy <tabdy@redhat.com>
+Code-Review+1: Matt Jia <mjia@redhat.com>
+Code-Review+2: Blake McIvor <bmcivor@redhat.com>
+Verified+1: Tyrone Abdy <tabdy@redhat.com>
+Submitted-by: Tyrone Abdy <tabdy@redhat.com>
+Submitted-at: Thu, 22 Dec 2016 03:48:10 +0000
+Reviewed-on: https://gerrit.beaker-project.org/5562
+Project: beaker-jenkins-jobs
+Branch: refs/heads/master
