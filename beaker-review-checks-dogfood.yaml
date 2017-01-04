@@ -103,8 +103,8 @@
             bkr job-results --format=junit-xml $jobid >beaker/$jobid/junit.xml
             bkr job-logs $jobid | grep -v debug | \
             while read url ; do
-                # turn a URL like http://.../1234/TESTOUT.log into 1234-TESTOUT.log
-                filename="$(echo "$url" | sed -r -e 's@^.*/([0-9]+)/([^/]*$)@\1-\2@')"
+                # turn a URL like http://.../1234/logs/TESTOUT.log into 1234-TESTOUT.log
+                filename="$(echo "$url" | sed -r -e 's@^.*/([0-9]+)/logs/([^/]*$)@\1-\2@')"
                 curl -L -f -s -S -o "beaker/$jobid/$filename" "$url"
             done
 
