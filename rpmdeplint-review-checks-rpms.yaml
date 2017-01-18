@@ -36,8 +36,6 @@
             mockconfig: fedora-25-x86_64
         - Fedora24:
             mockconfig: fedora-24-x86_64
-        - Fedora23:
-            mockconfig: fedora-23-x86_64
         - RedHatEnterpriseLinux7:
             mockconfig: epel-7-x86_64
     jobs:

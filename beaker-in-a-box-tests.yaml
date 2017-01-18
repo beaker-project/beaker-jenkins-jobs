@@ -61,7 +61,7 @@
 - project:
     name: beaker-in-a-box-tests
     distro:
+        - Fedora25
         - Fedora24
-        - Fedora23
     jobs:
         - beaker-in-a-box-tests-{distro}

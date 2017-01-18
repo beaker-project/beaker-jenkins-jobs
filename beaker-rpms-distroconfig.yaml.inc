@@ -7,9 +7,6 @@
 - Fedora24:
     mockconfig: fedora-24-x86_64
     ignorefail: ""
-- Fedora23:
-    mockconfig: fedora-23-x86_64
-    ignorefail: ""
 - RedHatEnterpriseLinux7:
     mockconfig: sed-rhel-7-x86_64
     ignorefail: ""
