@@ -8,7 +8,7 @@
     scm: !include: beaker-review-checks-scmconfig.yaml.inc
     triggers:
         - beaker-review-checks-gerrit-trigger:
-            file_paths_pattern: "^(Server/|Client/|LabController/|Common/|IntegrationTests/).*"
+            file_paths_pattern: "^(Server/|Client/|LabController/|Common/|IntegrationTests/|Makefile|beaker\\.spec).*"
             dependency_jobs: "beaker-review-checks-rpms-{distro},beaker-review-checks-pylint"
             ignorefail: ""
     properties:
