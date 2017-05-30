@@ -5,6 +5,7 @@
     properties:
         - priority-sorter:
             priority: 120
+    node: fedora
     scm:
         - git:
             url: git://git.beaker-project.org/restraint

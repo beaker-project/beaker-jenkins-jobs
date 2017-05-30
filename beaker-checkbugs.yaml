@@ -8,6 +8,7 @@
               priority: 50
     logrotate:
         numToKeep: 30
+    node: fedora
     scm:
         - git:
             url: git://git.beaker-project.org/beaker
@@ -36,7 +37,10 @@
         # This is BNE business hours, but expressed in UTC
         # (our Jenkins master runs in UTC)
         - timed: "H 0-8,22-23 * * *"
-
+    wrappers:
+        - ssh-agent-credentials:
+            users:
+                - 'fac135e6-5a13-4cd0-8dd5-737da825099b'
     builders:
         - shell: |
             cd beaker

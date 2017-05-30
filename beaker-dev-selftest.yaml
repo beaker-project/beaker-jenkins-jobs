@@ -3,6 +3,7 @@
     description: |
         Runs bkr workflow-selftest against the Beaker devel environment, to 
         check that the currently deployed Beaker release works properly.
+    node: fedora
     parameters:
         - string:
             name: WHITEBOARD

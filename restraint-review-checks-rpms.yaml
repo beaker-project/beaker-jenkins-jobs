@@ -5,6 +5,7 @@
     logrotate:
         daysToKeep: 30
     concurrent: true
+    node: fedora
     scm: !include: restraint-review-checks-scmconfig.yaml.inc
     triggers:
         - restraint-review-checks-gerrit-trigger:
