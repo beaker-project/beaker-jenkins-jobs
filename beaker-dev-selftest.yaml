@@ -26,7 +26,12 @@
             artifacts: beaker/**
     builders:
         - shell: |
-            export BEAKER_CLIENT_CONF=/etc/beaker/client-devel.conf
+            cat >client.conf <<EOF
+            HUB_URL="https://beaker-devel.app.eng.bos.redhat.com"
+            AUTH_METHOD="krbv"
+            EOF
+            export BEAKER_CLIENT_CONF=client.conf
+            k5start -U -f $JENKINS_KEYTAB
 
             python setup.py egg_info
             export PYTHONPATH=src
@@ -42,3 +47,8 @@
             if [[ "$jobresult" != "Completed/Pass" ]] ; then
                 exit 1
             fi
+    wrappers:
+        - credentials-binding:
+            - file:
+                credential-id: "1fc5282d-0e61-4736-ace4-9ff23b065636"
+                variable: JENKINS_KEYTAB
