@@ -9,7 +9,7 @@
     scm: !include: beaker-review-checks-scmconfig.yaml.inc
     triggers:
         - beaker-review-checks-gerrit-trigger:
-            file_paths_pattern: "^(Server/|Client/|LabController/|Common/|IntegrationTests/).*"
+            file_paths_pattern: ".*"
             dependency_jobs: ""
             ignorefail: ""
     builders:
