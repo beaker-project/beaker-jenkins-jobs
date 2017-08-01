@@ -12,9 +12,9 @@
         - shell: |
             set -o pipefail
             if grep -qF 'Programming Language :: Python :: 3 :: Only' setup.py ; then
-                PYLINTCMD=python3-pylint
+                PYLINTCMD=pylint-3
             else
-                PYLINTCMD=pylint
+                PYLINTCMD=pylint-2
             fi
             $PYLINTCMD --reports=n --disable=I,R,C,W,E1101 rpmtesttrigger | tee pylint.out
     publishers:

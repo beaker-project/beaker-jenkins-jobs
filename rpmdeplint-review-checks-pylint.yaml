@@ -11,7 +11,7 @@
     builders:
         - shell: |
             set -o pipefail
-            pylint --reports=n --disable=I,R,C,W,E1101 rpmdeplint | tee pylint.out
+            pylint-2 --reports=n --disable=I,R,C,W,E1101 rpmdeplint | tee pylint.out
     publishers:
         - archive:
             artifacts: pylint.out
