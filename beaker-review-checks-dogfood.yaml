@@ -77,7 +77,7 @@
                                 <param name="RHTS_OPTION_COMPAT_SERVICE" value=""/>
                                 <param name="EXPECT_BEAKER_GIT_BUILD" value="1"/>
                                 <param name="MYSQL_EXTRA_CONFIG" value="innodb-flush-log-at-trx-commit = 2"/>
-                                <param name="OPENSTACK_IDENTITY_API_URL" value="http://dashboard.centralci.eng.rdu2.redhat.com:5000/v3"/>
+                                <param name="OPENSTACK_IDENTITY_API_URL" value="https://ci-rhos.centralci.eng.rdu2.redhat.com:13000/v3"/>
                                 <param name="OPENSTACK_BEAKER_USERNAME" value="$OPENSTACK_BEAKER_USERNAME"/>
                                 <param name="OPENSTACK_BEAKER_PASSWORD" value="$OPENSTACK_BEAKER_PASSWORD"/>
                             </params>
