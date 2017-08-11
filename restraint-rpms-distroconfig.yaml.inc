@@ -15,15 +15,15 @@
     kojitag: beaker-harness-fedora-24
     ignorefail: ""
 - RedHatEnterpriseLinux7:
-    dist: .el7_2
+    dist: .el7bkr
     kojitag: beaker-harness-rhel-7
     ignorefail: ""
 - RedHatEnterpriseLinux6:
-    dist: .el6
+    dist: .el6bkr
     kojitag: beaker-harness-rhel-6
     ignorefail: ""
 - RedHatEnterpriseLinux5:
-    dist: .el5_9
+    dist: .el5bkr
     kojitag: beaker-harness-rhel-5
     ignorefail: ""
 - RedHatEnterpriseLinux4:
