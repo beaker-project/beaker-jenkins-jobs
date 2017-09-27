@@ -25,3 +25,5 @@
             flock $XDG_RUNTIME_DIR/restraint-tests-flock make -C src valgrind
     publishers:
         - report-failures
+    notifications:
+        - notify-matrix-bot

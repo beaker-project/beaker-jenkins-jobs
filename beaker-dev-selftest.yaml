@@ -52,3 +52,5 @@
             - file:
                 credential-id: "1fc5282d-0e61-4736-ace4-9ff23b065636"
                 variable: JENKINS_KEYTAB
+    notifications:
+        - notify-matrix-bot

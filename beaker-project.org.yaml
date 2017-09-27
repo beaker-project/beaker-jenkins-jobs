@@ -54,3 +54,5 @@
         - critical-block-end
     publishers:
         - report-failures
+    notifications:
+        - notify-matrix-bot

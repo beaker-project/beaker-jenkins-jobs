@@ -25,3 +25,5 @@
             flock $XDG_RUNTIME_DIR/restraint-tests-flock make check
     publishers:
         - report-failures
+    notifications:
+        - notify-matrix-bot

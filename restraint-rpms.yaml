@@ -33,6 +33,8 @@
                 tito build --dist {dist} --srpm --output . --test
                 koji -p beakerkoji build --wait {kojitag}-testing ./restraint*{dist}.src.rpm
             fi
+    notifications:
+        - notify-matrix-bot
 
 - project:
     name: restraint-rpms

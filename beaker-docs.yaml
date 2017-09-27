@@ -93,6 +93,8 @@
         - report-failures
         - archive:
             artifacts: beaker/documentation/_build/html/**
+    notifications:
+        - notify-matrix-bot
 
 - project:
     name: beaker-docs
