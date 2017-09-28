@@ -1,11 +1,11 @@
 - Fedorarawhide:
     mockconfig: fedora-rawhide-x86_64
     ignorefail: "1"
+- Fedora26:
+    mockconfig: fedora-26-x86_64
+    ignorefail: ""
 - Fedora25:
     mockconfig: fedora-25-x86_64
-    ignorefail: ""
-- Fedora24:
-    mockconfig: fedora-24-x86_64
     ignorefail: ""
 - RedHatEnterpriseLinux7:
     mockconfig: sed-rhel-7-x86_64
