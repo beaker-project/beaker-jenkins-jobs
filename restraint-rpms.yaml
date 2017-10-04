@@ -19,8 +19,6 @@
     triggers:
         - pollscm:
             cron: "H/5 * * * *"
-    publishers:
-        - report-failures
     builders:
         - restraint-fetch-tarballs
         - shell: |

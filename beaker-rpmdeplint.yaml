@@ -38,7 +38,5 @@
                 --repo=beaker-server-rhel6,https://beaker-project.org/yum/server/RedHatEnterpriseLinux6/ \
                 --arch=x86_64 \
                 *.rpm
-    publishers:
-        - report-failures
     notifications:
         - notify-matrix-bot

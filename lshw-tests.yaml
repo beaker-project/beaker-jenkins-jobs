@@ -38,7 +38,5 @@
             make
             LSHW=../lshw/src/lshw ./run-tests.sh
 
-    publishers:
-        - report-failures
     notifications:
         - notify-matrix-bot
