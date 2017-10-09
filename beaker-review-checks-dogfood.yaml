@@ -62,7 +62,8 @@
                         </distroRequires>
                         <hostRequires>
                             <system_type value="Machine"/>
-                            <pool value="beaker-dogfood"/>
+                            <memory op="&gt;=" value="4096"/>
+                            <not><pool value="too-slow-for-beaker-dogfood"/></not>
                         </hostRequires>
                         <partitions/>
                         <task name="/distribution/install" role="STANDALONE">
