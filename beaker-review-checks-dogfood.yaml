@@ -48,6 +48,14 @@
                         </repos>
                         <packages>
                             <package name="-prelink" />
+                            <!--
+                            OpenStack includes mariadb-galera-server which provides mysql-server,
+                            thereby confusing Anaconda since the /distribution/beaker/setup task
+                            requires both mariadb-server (for RHEL7) and mysql-server (for RHEL6).
+                            We exclude mariadb-galera-server so that Anaconda can figure out
+                            what we want (which is the normal mariadb-server).
+                            -->
+                            <package name="-mariadb-galera-server" />
                             <package name="python-keystoneclient" />
                             <package name="python-novaclient" />
                             <package name="python-glanceclient" />
