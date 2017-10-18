@@ -1,7 +1,11 @@
 - Fedorarawhide:
-    dist: .fc27
+    dist: .fc28
     kojitag: beaker-harness-fedora-rawhide
     ignorefail: "1"
+- Fedora27:
+    dist: .fc27
+    kojitag: beaker-harness-fedora-27
+    ignorefail: ""
 - Fedora26:
     dist: .fc26
     kojitag: beaker-harness-fedora-26
