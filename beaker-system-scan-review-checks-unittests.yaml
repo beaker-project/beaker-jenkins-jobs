@@ -1,0 +1,26 @@
+- job:
+    name: beaker-system-scan-review-checks-unittests
+    description: |
+        Runs beaker-system-scan unit tests for patches posted to Gerrit.
+    logrotate:
+        daysToKeep: 30
+    concurrent: true
+    node: fedora
+    scm: !include: beaker-system-scan-review-checks-scmconfig.yaml.inc
+    triggers:
+        - beaker-system-scan-review-checks-gerrit-trigger:
+            ignorefail: ""
+    builders:
+        - shell: |
+            set -o pipefail
+            make | tee make.out
+            cd tests
+            ./run-tests.sh | tee ../tests.out
+    publishers:
+        - archive:
+            artifacts: "make.out,tests.out"
+    wrappers:
+        - publish-over-ssh-post-build:
+            site: "beaker-project.org jenkins-results"
+            source: "make.out tests.out"
+            target: "$JOB_NAME/$BUILD_NUMBER"
