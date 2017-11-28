@@ -5,8 +5,9 @@
     concurrent: true
     node: fedora
     triggers:
-        # This requires the jenkins-ci-sidekick package, which is currently internal-only...
+        # This requires the CI Ops sidekick package, which is currently internal-only...
         - ci-trigger:
+            override-topic: "Consumer.rh-jenkins-ci-plugin.b6884b9c-0532-4809-83b1-bcd7fece6074.VirtualTopic.qe.ci.>"
             jms-selector: "package = 'beaker' AND method = 'build' AND CI_TYPE = 'brew-taskstatechange' AND new = 'CLOSED' AND target = 'eng-rhel-6-candidate'"
     builders:
         - shell: |

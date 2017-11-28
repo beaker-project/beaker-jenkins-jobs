@@ -18,8 +18,9 @@
             skip-tag: true
             reference-repo: /var/lib/jenkins/gitreference/rpmdeplint
     triggers:
-        # This requires the jenkins-ci-sidekick package, which is currently internal-only...
+        # This requires the CI Ops sidekick package, which is currently internal-only...
         - ci-trigger:
+            override-topic: "Consumer.rh-jenkins-ci-plugin.e3a8bdbd-aa74-4a53-ade8-ed3f00ded7d0.VirtualTopic.qe.ci.>"
             jms-selector: "package = 'beaker' AND method = 'build' AND CI_TYPE = 'brew-taskstatechange' AND new = 'CLOSED' AND target = 'eng-rhel-6-candidate'"
     builders:
         - shell: |
