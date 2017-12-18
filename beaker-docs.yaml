@@ -79,14 +79,21 @@
 
             PYTHONPATH=Common:Server:Client/src python -c '__requires__ = ["CherryPy < 3.0"]; import pkg_resources; execfile("/usr/bin/sphinx-build")' \
                 -b html -D html_theme=beaker -A branch_warning="$branch_warning" documentation documentation/_build/html
-            rm -r documentation/_build/html/.doctrees
+
+            PYTHONPATH=Common:Server:Client/src python -c '__requires__ = ["CherryPy < 3.0"]; import pkg_resources; execfile("/usr/bin/sphinx-build")' \
+                -b latex documentation documentation/_build/latex
+            make -C documentation/_build/latex all-pdf
+
+            mkdir documentation/tree
+            cp -r documentation/_build/html/* documentation/tree/
+            cp documentation/_build/latex/*.pdf documentation/tree/
 
         - critical-block-start
         - shell: |
             cd beaker/
             destdir=docs
             if [[ "{branch}" != master ]] ; then destdir="docs-{branch}" ; fi
-            rsync -v -r -l --checksum --delete-after documentation/_build/html/ "jenkins@beaker-project.org:/srv/www/beaker-project.org/htdocs/$destdir/"
+            rsync -v -r -l --checksum --delete-after documentation/tree/ "jenkins@beaker-project.org:/srv/www/beaker-project.org/htdocs/$destdir/"
             ssh jenkins@beaker-project.org /srv/www/beaker-project.org/published.sh "Automatic\ commit\ by\ Jenkins\ job\ ${{JOB_NAME}}\ \#${{BUILD_NUMBER}}"
         - critical-block-end
     publishers:
