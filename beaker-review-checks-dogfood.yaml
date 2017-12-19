@@ -21,6 +21,9 @@
                     def rpmJobTriggered = gerritCause.context.others.find {{ it.projectId == 'beaker-review-checks-rpms-{distro}' }}
                     return [RPM_BUILD_NUMBER: rpmJobTriggered.buildNumber]
                 }}
+        - throttle:
+            option: project
+            max-total: 4
     builders:
         - shell: |
             cat >client.conf <<EOF
