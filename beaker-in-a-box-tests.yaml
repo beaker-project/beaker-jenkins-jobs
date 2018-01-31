@@ -5,19 +5,47 @@
     logrotate:
         daysToKeep: 30
     concurrent: true
+    node: fedora
     scm:
         - git:
-            url: git://git.beaker-project.org/beaker-in-a-box/
+            browser: cgit
+            browser-url: https://git.beaker-project.org/cgit/beaker-in-a-box/
+            reference-repo: /var/lib/jenkins/gitreference/beaker-in-a-box
+            url: ssh://jenkins@gerrit.beaker-project.org:29418/beaker-in-a-box
+            credentials-id: "fac135e6-5a13-4cd0-8dd5-737da825099b"
+            choosing-strategy: gerrit
+            name: gerrit
+            refspec: +refs/heads/*:refs/remotes/gerrit/* $GERRIT_REFSPEC
+            # 'branches' key is meaningless with Gerrit Trigger, but the
+            # default value '**' causes a NullPointerException:
+            # https://issues.jenkins-ci.org/browse/JENKINS-27559
             branches:
-                - origin/master
+                - master
+            merge:
+                remote: gerrit
+                branch: $GERRIT_BRANCH
+            changelog-against:
+                remote: gerrit
+                branch: $GERRIT_BRANCH
             clean:
                 before: true
             wipe-workspace: false
             skip-tag: true
-            reference-repo: /var/lib/jenkins/gitreference/beaker-in-a-box
+            use-author: true
     triggers:
-        - pollscm:
-            cron: "H/5 * * * *"
+        - gerrit:
+            server-name: gerrit.beaker-project.org
+            projects:
+                - project-compare-type: PLAIN
+                  project-pattern: beaker-in-a-box
+                  branches:
+                    - branch-compare-type: ANT
+                      branch-pattern: "**"
+            trigger-on:
+                - comment-added-event:
+                    approval-category: Ready-for-Checks
+                    approval-value: 1
+            custom-url: "https://beaker-project.org/jenkins-results/$JOB_NAME/$BUILD_NUMBER/"
 
     builders:
         - shell: |
@@ -37,7 +65,7 @@
                         <packages/>
                         <distroRequires>
                             <distro_arch op="=" value="x86_64" />
-                            <distro_variant op="=" value="Server" />
+                            <distro_variant op="=" value="Workstation" />
                             <family op="=" value="{distro}"/>
                         </distroRequires>
                         <hostRequires>
@@ -72,7 +100,6 @@
 - project:
     name: beaker-in-a-box-tests
     distro:
-        - Fedora25
-        - Fedora24
+        - Fedora27
     jobs:
         - beaker-in-a-box-tests-{distro}
