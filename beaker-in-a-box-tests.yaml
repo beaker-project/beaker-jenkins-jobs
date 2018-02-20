@@ -56,9 +56,9 @@
             export BEAKER_CLIENT_CONF=client.conf
             k5start -U -f $JENKINS_KEYTAB
 
-            job_submit_output=$(bkr job-submit - <<EOF
+            job_submit_output=$(bkr job-submit --xml - <<EOF
             <job group="beakerdevs" retention_tag="scratch">
-                <whiteboard>$JOB_NAME #$BUILD_NUMBER</whiteboard>
+                <whiteboard>$JOB_NAME #[$BUILD_NUMBER]($BUILD_URL) from Gerrit #[$GERRIT_CHANGE_NUMBER]($GERRIT_CHANGE_URL)</whiteboard>
                 <recipeSet priority="Medium">
                     <recipe whiteboard="Beaker In A Box Playbook Test">
                         <repos />
@@ -74,7 +74,12 @@
                         </hostRequires>
                         <partitions/>
                         <task name="/distribution/install" role="STANDALONE" />
-                        <task name="/distribution/beaker/beaker-in-a-box" role="STANDALONE" />
+                        <task name="/distribution/beaker/Sanity/beaker-in-a-box" role="STANDALONE">
+                          <params>
+                            <param name="GERRIT_REFSPEC" value="$GERRIT_REFSPEC" />
+                            <param name="ANSIBLE_PLAYBOOK_PARAMS" value="-vv" />
+                          </params>
+                        </task>
                     </recipe>
                 </recipeSet>
             </job>
@@ -85,7 +90,16 @@
             bkr job-watch $jobid || :
 
             mkdir -p beaker/$jobid
-            bkr job-results --prettyxml $jobid >beaker/$jobid/results.xml
+            bkr job-results --prettyxml $jobid | \
+                sed -e 's@[-a-zA-Z0-9.]*\.redhat\.com@CENSORED.redhat.com@g' \
+                >beaker/$jobid/results.xml
+            bkr job-results --format=junit-xml $jobid >beaker/$jobid/junit.xml
+            bkr job-logs $jobid | grep -v debug/ | \
+            while read url ; do
+                # turn a URL like http://.../1234/logs/TESTOUT.log into 1234-TESTOUT.log
+                filename="$(echo "$url" | sed -r -e 's@^.*/([0-9]+)/logs/([^/]*$)@\1-\2@')"
+                curl -L -f -s -S -o "beaker/$jobid/$filename" "$url"
+            done
 
             jobresult=$(xmlstarlet sel -t -v 'concat(/job/@status, "/", /job/@result)' <beaker/$jobid/results.xml)
             if [[ "$jobresult" != "Completed/Pass" ]] ; then
@@ -96,6 +110,15 @@
             - file:
                 credential-id: "1fc5282d-0e61-4736-ace4-9ff23b065636"
                 variable: JENKINS_KEYTAB
+    publishers:
+        - archive:
+            artifacts: beaker/**
+        - junit:
+            results: beaker/*/junit.xml
+        - ssh:
+            site: "beaker-project.org jenkins-results"
+            source: "beaker/**"
+            target: "$JOB_NAME/$BUILD_NUMBER"
 
 - project:
     name: beaker-in-a-box-tests
