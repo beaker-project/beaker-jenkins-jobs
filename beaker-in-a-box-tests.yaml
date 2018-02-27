@@ -71,6 +71,7 @@
                         <hostRequires>
                             <system_type value="Machine"/>
                             <key_value key="HVM" op="=" value="1" />
+                            <diskspace op="&gt;=" value="100" units="GB" />
                         </hostRequires>
                         <partitions/>
                         <task name="/distribution/install" role="STANDALONE" />
