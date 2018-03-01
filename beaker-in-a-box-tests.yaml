@@ -60,7 +60,7 @@
             <job group="beakerdevs" retention_tag="scratch">
                 <whiteboard>$JOB_NAME #[$BUILD_NUMBER]($BUILD_URL) from Gerrit #[$GERRIT_CHANGE_NUMBER]($GERRIT_CHANGE_URL)</whiteboard>
                 <recipeSet priority="Medium">
-                    <recipe whiteboard="Beaker In A Box Playbook Test">
+                    <recipe ks_meta="fstype=xfs" whiteboard="Beaker In A Box Playbook Test">
                         <repos />
                         <packages/>
                         <distroRequires>
@@ -71,7 +71,7 @@
                         <hostRequires>
                             <system_type value="Machine"/>
                             <key_value key="HVM" op="=" value="1" />
-                            <diskspace op="&gt;=" value="100" units="GB" />
+                            <diskspace op="&gt;=" value="150" units="GB" />
                         </hostRequires>
                         <partitions/>
                         <task name="/distribution/install" role="STANDALONE" />
