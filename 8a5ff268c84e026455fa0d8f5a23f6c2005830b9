@@ -1,0 +1,9 @@
+Ready-for-Checks+1: Roman Joost <rjoost@redhat.com>
+Code-Review+1: Anwesha Chatterjee <achatter@redhat.com>
+Code-Review+2: Dan Callaghan <dcallagh@redhat.com>
+Verified+1: Roman Joost <rjoost@redhat.com>
+Submitted-by: Roman Joost <rjoost@redhat.com>
+Submitted-at: Mon, 05 Mar 2018 06:43:08 +0000
+Reviewed-on: https://gerrit.beaker-project.org/6006
+Project: beaker-jenkins-jobs
+Branch: refs/heads/master
