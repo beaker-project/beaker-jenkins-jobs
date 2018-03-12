@@ -1,0 +1,71 @@
+- job:
+    name: beaker-project.org-review-checks
+    description: |
+        Builds all non-Sphinx web site content from
+        https://git.beaker-project.org/cgit/beaker-project.org/ for patches
+        posted to Gerrit.
+    properties:
+        - priority-sorter:
+            priority: 150
+    node: fedora
+    scm:
+        - git:
+            url: ssh://jenkins@gerrit.beaker-project.org:29418/beaker-project.org
+            credentials-id: "fac135e6-5a13-4cd0-8dd5-737da825099b"
+            branches:
+                - origin/master
+            basedir: beaker-project.org
+            choosing-strategy: gerrit
+            name: gerrit
+            refspec: +refs/heads/*:refs/remotes/gerrit/* $GERRIT_REFSPEC
+            merge:
+                remote: gerrit
+                branch: $GERRIT_BRANCH
+            changelog-against:
+                remote: gerrit
+                branch: $GERRIT_BRANCH
+            # no clean because we don't want to fetch tarballs and RPMs every time!
+            wipe-workspace: false
+            skip-tag: true
+            reference-repo: /var/lib/jenkins/gitreference/beaker-project.org
+        - git:
+            url: ssh://jenkins@gerrit.beaker-project.org:29418/beaker
+            credentials-id: "fac135e6-5a13-4cd0-8dd5-737da825099b"
+            branches:
+                - origin/master
+            basedir: beaker
+            clean:
+                before: true
+            wipe-workspace: false
+            skip-tag: true
+            reference-repo: /var/lib/jenkins/gitreference/beaker
+    triggers:
+        - gerrit:
+            server-name: gerrit.beaker-project.org
+            projects:
+                - project-compare-type: PLAIN
+                  project-pattern: beaker-project.org
+                  branches:
+                    - branch-compare-type: ANT
+                      branch-pattern: "**"
+                  file-paths:
+                    - compare-type: REG_EXP
+                      pattern: ".*"
+            trigger-on:
+                - comment-added-event:
+                    approval-category: Ready-for-Checks
+                    approval-value: 1
+            escape-quotes: false
+            silent-start: true
+    wrappers:
+        - exclusion:
+            resources:
+                - htdocs
+    builders:
+        - shell: |
+            cd beaker-project.org/
+            make clean
+            # Don't run the full make, because parts will download our release
+            # tarballs and build a yum repository
+            make releases/index.html
+            make releases/index.atom
