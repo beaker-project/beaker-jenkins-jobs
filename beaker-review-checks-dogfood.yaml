@@ -39,7 +39,7 @@
                     beaker dogfood {distro} for Gerrit $GERRIT_CHANGE_NUMBER/$GERRIT_PATCHSET_NUMBER: $(xmlstarlet esc "$GERRIT_CHANGE_SUBJECT")
                 </whiteboard>
                 <recipeSet priority="{jobprio}">
-                    <recipe ks_meta="method=http selinux=--disabled" whiteboard="Nose Tests">
+                    <recipe ks_meta="harness=restraint-rhts method=http selinux=--disabled" whiteboard="Nose Tests">
                         <repos>
                             {extrarepos}
                             <repo name="beaker-project-server" url="https://beaker-project.org/yum/server-testing/{distro}/" />
