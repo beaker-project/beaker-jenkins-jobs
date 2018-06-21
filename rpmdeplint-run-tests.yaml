@@ -15,7 +15,7 @@
         PYTHONPATH=$BUILDROOT_PYTHONSITEDIR PATH=$BUILDROOT_BINDIR:$PATH \
             py.test -s -vv --full-trace --durations=10 --junit-xml=junit-accept-py2.xml acceptance_tests 2>&1 | tee --append tests.out
         if {has_python3} ; then
-            python3 setup.py install --root=$BUILDROOT
+            python3 setup.py install --root=$BUILDROOT --prefix=/usr
             BUILDROOT_PYTHON3SITEDIR=$(echo $BUILDROOT/usr/lib/python3.*/site-packages)
             test -x $BUILDROOT_BINDIR/rpmdeplint
             test -d $BUILDROOT_PYTHON3SITEDIR
