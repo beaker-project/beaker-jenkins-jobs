@@ -11,7 +11,7 @@
         - beaker-review-checks-gerrit-trigger:
             file_paths_pattern: "^(Server/|Client/|LabController/|Common/|IntegrationTests/|Makefile|beaker\\.spec).*"
             dependency_jobs: "beaker-review-checks-rpms-{distro},beaker-review-checks-pylint"
-            ignorefail: ""
+            ignorefail: "{ignorefail}"
     properties:
         - inject:
             groovy-content: |
@@ -68,8 +68,8 @@
                         <distroRequires>
                             <distro_family op="=" value="{distro}"/>
                             <distro_arch op="=" value="x86_64" />
-                            <distro_variant op="=" value="Server" />
-                            <distro_tag op="=" value="RELEASED" />
+                            <distro_variant op="=" value="{variant}" />
+                            <distro_tag op="=" value="{distrotag}" />
                         </distroRequires>
                         <hostRequires>
                             <system_type value="Machine"/>
