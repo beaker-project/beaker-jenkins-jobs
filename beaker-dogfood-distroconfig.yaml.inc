@@ -25,5 +25,7 @@
     distrotag: RELEASED
     jobprio: Medium
     extrarepos: |
-        <repo name="centos6-openstack-juno" url="http://mirror.centos.org/centos/6/cloud/x86_64/openstack-juno/" />
+        <!-- <repo name="centos6-openstack-juno" url="http://mirror.centos.org/centos/6/cloud/x86_64/openstack-juno/" /> -->
+        <!-- The openstack-juno repo does not exist for 6.10 (yet), thus we continue using the one for 6.9 and hope it works... -->
+        <repo name="centos6-openstack-juno" url="http://mirror.centos.org/centos/6.9/cloud/x86_64/openstack-juno/" />
     ignorefail: ""
