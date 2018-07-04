@@ -4,12 +4,13 @@
     jobprio: Low
     extrarepos: ""
     ignorefail: "1"
-- RedHatEnterpriseLinux8:
-    variant: BaseOS
-    distrotag: ""
-    jobprio: Low
-    extrarepos: ""
-    ignorefail: "1"
+# No RHEL8 jobs until we can build a beaker-server module
+#- RedHatEnterpriseLinux8:
+#    variant: BaseOS
+#    distrotag: ""
+#    jobprio: Low
+#    extrarepos: ""
+#    ignorefail: "1"
 - RedHatEnterpriseLinux7:
     variant: Server
     distrotag: RELEASED
