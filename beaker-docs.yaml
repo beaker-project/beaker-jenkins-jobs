@@ -121,5 +121,6 @@
         - release-22
         - release-23
         - release-24
+        - release-25
     jobs:
         - "beaker-docs-{branch}"
