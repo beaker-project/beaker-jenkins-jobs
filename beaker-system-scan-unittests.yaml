@@ -1,0 +1,29 @@
+- job:
+    name: beaker-system-scan-unittests
+    description: |
+        Runs beaker-system-scan unit tests for the master branch.
+    logrotate:
+        numToKeep: 30
+    concurrent: true
+    node: fedora
+    scm:
+        - git:
+            url: git://git.beaker-project.org/beaker-system-scan
+            branches:
+                - origin/master
+            clean:
+                before: true
+            wipe-workspace: false
+            skip-tag: true
+    triggers:
+        - beaker-system-scan-review-checks-gerrit-trigger:
+            ignorefail: ""
+    builders:
+        - beaker-system-scan-run-tests
+    publishers:
+        - archive:
+            artifacts: "make.out,tests.out"
+        - junit:
+            results: "junit.xml"
+    notifications:
+        - notify-matrix-bot

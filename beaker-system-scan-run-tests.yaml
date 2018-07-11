@@ -1,0 +1,7 @@
+- builder:
+    name: beaker-system-scan-run-tests
+    builders:
+    - shell: |
+        set -o pipefail
+        make | tee make.out
+        PYTHONPATH=. py.test -s -vv --full-trace --durations=10 --junit-xml=junit.xml 2>&1 | tee tests.out

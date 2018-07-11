@@ -11,16 +11,14 @@
         - beaker-system-scan-review-checks-gerrit-trigger:
             ignorefail: ""
     builders:
-        - shell: |
-            set -o pipefail
-            make | tee make.out
-            cd tests
-            ./run-tests.sh | tee ../tests.out
+        - beaker-system-scan-run-tests
     publishers:
         - archive:
             artifacts: "make.out,tests.out"
+        - junit:
+            results: "junit.xml"
     wrappers:
         - publish-over-ssh-post-build:
             site: "beaker-project.org jenkins-results"
-            source: "make.out tests.out"
+            source: "make.out tests.out junit.xml"
             target: "$JOB_NAME/$BUILD_NUMBER"
