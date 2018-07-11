@@ -1,6 +1,49 @@
 - job:
     name: lshw-tests
     description: |
+        Regression test cases for lshw, using LD_PRELOAD trickery to ensure 
+        that the XML output on various different systems matches the expected 
+        output.
+    node: fedora
+    scm:
+        - git:
+            url: https://ezix.org/src/pkg/lshw.git
+            branches:
+                - origin/master
+            basedir: lshw
+            clean:
+                before: true
+            wipe-workspace: false
+            skip-tag: true
+        - git:
+            url: https://github.com/beaker-project/lshw-tests.git
+            branches:
+                - origin/master
+            basedir: lshw-tests
+            clean:
+                before: true
+            wipe-workspace: false
+            skip-tag: true
+
+    triggers:
+        - pollscm:
+            cron: "H/5 * * * *"
+
+    builders:
+        - shell: |
+            cd lshw
+            make DATADIR=$(readlink -f src)
+        - shell: |
+            cd lshw-tests
+            make
+            LSHW=../lshw/src/lshw ./run-tests.sh
+
+    notifications:
+        - notify-matrix-bot
+
+- job:
+    name: lshw-tests-beaker-fork
+    description: |
         Regression test cases for Beaker's lshw fork, using LD_PRELOAD trickery 
         to ensure that the XML output on various different systems matches the 
         expected output.
