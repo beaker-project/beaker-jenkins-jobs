@@ -16,7 +16,7 @@
             : ${XDG_RUNTIME_DIR:=/run/user/$(id -u)}
             unset http_proxy
             set -o pipefail
-            flock $XDG_RUNTIME_DIR/restraint-tests-flock make check | tee check.out
+            flock $XDG_RUNTIME_DIR/restraint-tests-flock make check 2>&1 | tee check.out
     publishers:
         - archive:
             artifacts: check.out
