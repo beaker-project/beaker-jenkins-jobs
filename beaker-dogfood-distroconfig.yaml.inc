@@ -1,9 +1,10 @@
-- Fedora28:
-    variant: Server
-    distrotag: RELEASED
-    jobprio: Low
-    extrarepos: ""
-    ignorefail: "1"
+# No Fedora 28 jobs until this selenium bug is fixed: https://bugzilla.redhat.com/show_bug.cgi?id=1599109
+#- Fedora28:
+#    variant: Server
+#    distrotag: RELEASED
+#    jobprio: Low
+#    extrarepos: ""
+#    ignorefail: "1"
 # No RHEL8 jobs until we can build a beaker-server module
 #- RedHatEnterpriseLinux8:
 #    variant: BaseOS
