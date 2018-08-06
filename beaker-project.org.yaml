@@ -33,6 +33,9 @@
     triggers:
         - pollscm:
             cron: "H/5 * * * *"
+        - ci-trigger:
+            override-topic: "Consumer.rh-jenkins-ci-plugin.f56fda0c-8f45-4964-873a-729a8bdf9256.VirtualTopic.eng.brew.build.>"
+            jms-selector: "type IN ('Tag', 'Untag') AND (tag LIKE 'beaker-%' OR tag LIKE 'eng-fedora-%')"
     wrappers:
         - exclusion:
             resources:
@@ -42,6 +45,12 @@
                 - '8f6d9af6-2faf-451a-86f5-ad433b0f9e9a'
     builders:
         - shell: |
+            {
+                if [ -n "$CI_MESSAGE" ] ; then
+                    echo "Triggered by CI message: $CI_MESSAGE"
+                fi
+            } 2>/dev/null
+
             cd beaker-project.org/
             make clean
             make
