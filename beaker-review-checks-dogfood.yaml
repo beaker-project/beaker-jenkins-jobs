@@ -77,7 +77,7 @@
                             <not><pool value="too-slow-for-beaker-dogfood"/></not>
                         </hostRequires>
                         <partitions/>
-                        <task name="/distribution/install" role="STANDALONE">
+                        <task name="/distribution/check-install" role="STANDALONE">
                             <params>
                                 <param name="RHTS_OPTION_COMPATIBLE" value=""/>
                                 <param name="RHTS_OPTION_COMPAT_SERVICE" value=""/>

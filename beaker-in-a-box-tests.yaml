@@ -74,7 +74,7 @@
                             <diskspace op="&gt;=" value="150" units="GB" />
                         </hostRequires>
                         <partitions/>
-                        <task name="/distribution/install" role="STANDALONE" />
+                        <task name="/distribution/check-install" role="STANDALONE" />
                         <task name="/distribution/beaker/Sanity/beaker-in-a-box" role="STANDALONE">
                           <fetch url="git://git.beaker-project.org/beaker-meta-tasks?master#Sanity/beaker-in-a-box-tests"/>
                           <params>
