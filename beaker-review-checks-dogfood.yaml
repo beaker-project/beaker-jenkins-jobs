@@ -59,6 +59,8 @@
                             what we want (which is the normal mariadb-server).
                             -->
                             <package name="-mariadb-galera-server" />
+                            <!-- Workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1614628 -->
+                            <package name="elfutils-libs" />
                             <package name="python-keystoneclient" />
                             <package name="python-novaclient" />
                             <package name="python-glanceclient" />
