@@ -60,7 +60,7 @@
             <job group="beakerdevs" retention_tag="scratch">
                 <whiteboard>$JOB_NAME #[$BUILD_NUMBER]($BUILD_URL) from Gerrit #[$GERRIT_CHANGE_NUMBER]($GERRIT_CHANGE_URL)</whiteboard>
                 <recipeSet priority="Medium">
-                    <recipe ks_meta="fstype=xfs harness=restraint-rhts" whiteboard="Beaker In A Box Playbook Test">
+                    <recipe ks_meta="fstype=xfs harness=restraint-rhts !install_task_requires" whiteboard="Beaker In A Box Playbook Test">
                         <repos />
                         <packages/>
                         <distroRequires>
