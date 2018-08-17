@@ -30,16 +30,15 @@
     triggers:
         - pollscm:
             cron: "H/5 * * * *"
+    wrappers:
+        - credentials-binding:
+            - file:
+                credential-id: "1fc5282d-0e61-4736-ace4-9ff23b065636"
+                variable: JENKINS_KEYTAB
     builders:
-        - shell: |
-            if [[ "$GIT_BRANCH" == "origin/develop" ]] ; then
-                Misc/rpmbuild.sh --next-major -bs
-            else
-                Misc/rpmbuild.sh -bs
-            fi
-            : ${{XDG_RUNTIME_DIR:=/run/user/$(id -u)}}
-            mkdir -p mock-result
-            flock $XDG_RUNTIME_DIR/beaker-jenkins-mock-flock-{mockconfig} /usr/bin/mock --resultdir=mock-result -r {mockconfig} --clean --rebuild rpmbuild-output/*.src.rpm
+        - beaker-build-rpms:
+            dist: "{dist}"
+            kojitarget: "{kojitarget}"
         - shell: |
             # GIT_BRANCH is actually remote/branch, e.g. origin/develop
             # so we export GIT_BRANCH_NAME as just the branch name, develop
@@ -49,11 +48,11 @@
             properties-file: env.properties
     publishers:
         - archive:
-            artifacts: mock-result/*
+            artifacts: koji-result/**
         - ssh:
             site: "beaker-project.org nightlies"
-            source: mock-result/*.rpm
-            remove-prefix: mock-result/
+            source: koji-result/*.rpm
+            remove-prefix: koji-result/
             target: "${{GIT_BRANCH_NAME}}/{distro}/"
             command: "createrepo_c --update --no-database /srv/www/nightlies/${{GIT_BRANCH_NAME}}/{distro}/"
     notifications:

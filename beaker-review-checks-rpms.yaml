@@ -13,34 +13,36 @@
             dependency_jobs: ""
             ignorefail: "{ignorefail}"
     builders:
-        - shell: |
-            Misc/rpmbuild.sh --next-major -bs
-        - shell: |
-            : ${{XDG_RUNTIME_DIR:=/run/user/$(id -u)}}
-            mkdir -p mock-result
-            flock $XDG_RUNTIME_DIR/beaker-jenkins-mock-flock-{mockconfig} /usr/bin/mock --resultdir=mock-result -r {mockconfig} --clean --rebuild rpmbuild-output/*.src.rpm
+        - beaker-build-rpms:
+            dist: "{dist}"
+            kojitarget: "{kojitarget}"
         - shell: |
             if [ -f Misc/rpmlint-config.py ] ; then # since Beaker 22
-                rpmlint -f Misc/rpmlint-config.py -o "NetworkEnabled False" mock-result/*.rpm
+                rpmlint -f Misc/rpmlint-config.py -o "NetworkEnabled False" koji-result/*.rpm
             fi
         - shell: |
-            rpmgrill-unpack-rpms mock-result/
+            rpmgrill-unpack-rpms koji-result/
             # Don't bother about missing man pages
-            rpmgrill --disable=ManPages,SpecFileSanity mock-result/unpacked/
+            rpmgrill --disable=ManPages,SpecFileSanity koji-result/unpacked/
             # Pick all test result keys which are not empty and use a workaround
             # to translate the jq exit code to a Jenkins exit code for pass/fail
-            bash -c "jq '.tests[].results | length > 0 | select(. == true)' mock-result/unpacked/rpmgrill.json -e; if [ \"\$?\" == 4 ]; then exit 0; else exit 1; fi"
+            bash -c "jq '.tests[].results | length > 0 | select(. == true)' koji-result/unpacked/rpmgrill.json -e; if [ \"\$?\" == 4 ]; then exit 0; else exit 1; fi"
         - shell: |
-            createrepo_c --no-database mock-result
+            createrepo_c --no-database koji-result
     publishers:
         - archive:
-            artifacts: "mock-result/*.log,mock-result/*.rpm,mock-result/unpacked/rpmgrill.*"
+            artifacts: "koji-result/*.log,koji-result/*.rpm,koji-result/unpacked/rpmgrill.*"
     wrappers:
         - publish-over-ssh-post-build:
             site: "beaker-project.org jenkins-results"
             # excluding .src.rpm to save a bit of space
-            source: "mock-result/*.log mock-result/*.noarch.rpm mock-result/repodata/** mock-result/unpacked/rpmgrill.*"
+            source: "koji-result/**/*.log koji-result/*.noarch.rpm koji-result/repodata/** koji-result/unpacked/rpmgrill.*"
             target: "$JOB_NAME/$BUILD_NUMBER"
+        - credentials-binding:
+            - file:
+                credential-id: "1fc5282d-0e61-4736-ace4-9ff23b065636"
+                variable: JENKINS_KEYTAB
+
 
 - project:
     name: beaker-review-checks-rpms

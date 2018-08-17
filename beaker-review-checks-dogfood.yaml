@@ -43,7 +43,7 @@
                         <repos>
                             {extrarepos}
                             <repo name="beaker-project-server" url="https://beaker-project.org/yum/server-testing/{distro}/" />
-                            <repo name="beaker-gitbuild" url="https://beaker-project.org/jenkins-results/beaker-review-checks-rpms-{distro}/$RPM_BUILD_NUMBER/mock-result/" />
+                            <repo name="beaker-gitbuild" url="https://beaker-project.org/jenkins-results/beaker-review-checks-rpms-{distro}/$RPM_BUILD_NUMBER/koji-result/" />
                             <!-- harness repo is needed so that rhts-test-env and rhts-python versions match -->
                             <repo name="beaker-project-harness" url="https://beaker-project.org/yum/harness-testing/{distro}/" />
                             <!-- for beaker-server-redhat -->

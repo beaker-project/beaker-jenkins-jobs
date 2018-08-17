@@ -1,15 +1,21 @@
-- Fedorarawhide:
-    mockconfig: fedora-rawhide-x86_64
-    ignorefail: "1"
+# RCM has not created this yet: https://projects.engineering.redhat.com/browse/RCM-38028
+#- Fedorarawhide:
+#    dist: .fc29
+#    kojitarget: eng-fedora-rawhide-candidate
+#    ignorefail: "1"
 - Fedora28:
-    mockconfig: fedora-28-x86_64
+    dist: .fc28
+    kojitarget: eng-fedora-28-candidate
     ignorefail: ""
 - Fedora27:
-    mockconfig: fedora-27-x86_64
+    dist: .fc27
+    kojitarget: eng-fedora-27-candidate
     ignorefail: ""
 - RedHatEnterpriseLinux7:
-    mockconfig: sed-rhel-7-x86_64
+    dist: .el7bkr
+    kojitarget: beaker-server-rhel-7-candidate
     ignorefail: ""
 - RedHatEnterpriseLinux6:
-    mockconfig: eng-rhel-6-x86_64
+    dist: .el6bkr
+    kojitarget: beaker-server-rhel-6-candidate
     ignorefail: ""
