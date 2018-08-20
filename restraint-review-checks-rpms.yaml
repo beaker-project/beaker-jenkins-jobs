@@ -1,7 +1,7 @@
 - job-template:
     name: restraint-review-checks-rpms-{distro}
     description: |
-        Builds RPMs for {distro} in Beaker's Koji for patches posted to Gerrit.
+        Builds RPMs for {distro} for patches posted to Gerrit.
     logrotate:
         daysToKeep: 30
     concurrent: true
@@ -12,28 +12,23 @@
             ignorefail: "{ignorefail}"
     builders:
         - restraint-fetch-tarballs
-        - shell: |
-            rm -f *.src.rpm
-            tito build --dist {dist} --test --srpm --output .
-            output=$(koji -p beakerkoji build --nowait --scratch --arch-override=x86_64 {kojitag} *.src.rpm)
-            if [[ $? -ne 0 ]] ; then
-                echo "$output" >&2
-                exit 1
-            fi
-            taskid=$(grep -P -o '(?<=Created task: )\d+' <<<"$output")
-            set +e
-            koji -p beakerkoji watch-task $taskid
-            rc=$?
-            mkdir -p koji-logs
-            koji -p beakerkoji download-logs -r -d koji-logs $taskid
-            exit $rc
+        - restraint-build-rpms:
+            dist: "{dist}"
+            kojitarget: "{kojitarget}"
     publishers:
         - archive:
-            artifacts: koji-logs/**
+            artifacts: koji-result/**
     wrappers:
+        - credentials-binding:
+            - file:
+                credential-id: "1fc5282d-0e61-4736-ace4-9ff23b065636"
+                variable: JENKINS_KEYTAB
         - publish-over-ssh-post-build:
             site: "beaker-project.org jenkins-results"
-            source: "koji-logs/**"
+            # Not saving the RPMs because they are too big.
+            # After https://bugzilla.redhat.com/show_bug.cgi?id=1559638 is done they should be smaller,
+            # consider adding them then.
+            source: "koji-result/**/*.log"
             target: "$JOB_NAME/$BUILD_NUMBER"
 
 - project:

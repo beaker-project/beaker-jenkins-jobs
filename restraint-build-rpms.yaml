@@ -1,0 +1,20 @@
+- builder:
+    name: restraint-build-rpms
+    builders:
+    - shell: |
+        rm -rf rpmbuild-output/ koji-result/
+        tito build --dist {dist} --test --srpm --output rpmbuild-output/
+        k5start -U -f $JENKINS_KEYTAB
+
+        # We will check exit status explicitly.
+        # We want to capture logs regardless whether the builds fails or not.
+        set +e
+        # Need to use python2 since Brew does not support gssapi auth yet
+        output=$(python2 /usr/bin/koji -p brew build --wait --scratch {kojitarget} rpmbuild-output/*.src.rpm)
+        rc=$?
+        taskid=$(grep -P -o '(?<=Created task: )\d+' <<<"$output")
+        mkdir -p koji-result
+        cd koji-result
+        python2 /usr/bin/koji -p brew download-logs --recurse --dir=. $taskid
+        python2 /usr/bin/koji -p brew download-task --noprogress $taskid
+        exit $rc

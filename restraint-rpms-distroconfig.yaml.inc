@@ -1,28 +1,29 @@
-- Fedorarawhide:
-    dist: .fc29
-    kojitag: beaker-harness-fedora-rawhide
-    ignorefail: "1"
+# RCM has not created this yet: https://projects.engineering.redhat.com/browse/RCM-38028
+#- Fedorarawhide:
+#    dist: .fc30
+#    kojitarget: beaker-harness-fedora-rawhide
+#    ignorefail: "1"
 - Fedora28:
     dist: .fc28
-    kojitag: beaker-harness-fedora-28
+    kojitarget: eng-fedora-28-candidate
     ignorefail: ""
 - Fedora27:
     dist: .fc27
-    kojitag: beaker-harness-fedora-27
+    kojitarget: eng-fedora-27-candidate
     ignorefail: ""
 - RedHatEnterpriseLinux7:
     dist: .el7bkr
-    kojitag: beaker-harness-rhel-7
+    kojitarget: beaker-harness-rhel-7-candidate
     ignorefail: ""
 - RedHatEnterpriseLinux6:
     dist: .el6bkr
-    kojitag: beaker-harness-rhel-6
+    kojitarget: beaker-harness-rhel-6-candidate
     ignorefail: ""
 - RedHatEnterpriseLinux5:
     dist: .el5bkr
-    kojitag: beaker-harness-rhel-5
+    kojitarget: beaker-harness-rhel-5-candidate
     ignorefail: ""
 - RedHatEnterpriseLinux4:
-    dist: .el4_8
-    kojitag: beaker-harness-rhel-4
+    dist: .el4bkr
+    kojitarget: beaker-harness-rhel-4-candidate
     ignorefail: ""
