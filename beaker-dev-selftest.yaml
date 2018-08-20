@@ -35,7 +35,7 @@
 
             python setup.py egg_info
             export PYTHONPATH=src
-            workflow_output=$(bkr workflow-selftest --whiteboard "$WHITEBOARD")
+            workflow_output=$(bkr workflow-selftest --whiteboard "$WHITEBOARD" --retention-tag audit --product '[internal]')
             jobid=$(echo $workflow_output | awk -F\' '{print $2}')
 
             bkr job-watch $jobid || :
