@@ -1,0 +1,6 @@
+Ready-for-Checks+1: Dan Callaghan <dcallagh@redhat.com>
+Verified+1: Dan Callaghan <dcallagh@redhat.com>
+Code-Review+2: Roman Joost <rjoost@redhat.com>
+Reviewed-on: https://gerrit.beaker-project.org/6257
+Project: beaker-jenkins-jobs
+Branch: refs/heads/master
