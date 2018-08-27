@@ -11,6 +11,13 @@
     dist: .fc27
     kojitarget: eng-fedora-27-candidate
     ignorefail: ""
+- RedHatEnterpriseLinux8:
+    dist: .el8
+    # Note that this is NOT the real target where we will be building,
+    # for now we can only do scratch builds but at least this way
+    # we can keep testing.
+    kojitarget: rhel-8.0.0-candidate
+    ignorefail: ""
 - RedHatEnterpriseLinux7:
     dist: .el7bkr
     kojitarget: beaker-harness-rhel-7-candidate
