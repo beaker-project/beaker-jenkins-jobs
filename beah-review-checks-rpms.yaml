@@ -1,0 +1,52 @@
+- job-template:
+    name: beah-review-checks-rpms-{distro}
+    description: |
+        Builds RPMs for {distro} in Brew for patches posted to Gerrit.
+    logrotate:
+        daysToKeep: 30
+    concurrent: true
+    node: fedora
+    scm: !include: beah-review-checks-scmconfig.yaml.inc
+    triggers:
+        - gerrit:
+            server-name: gerrit.beaker-project.org
+            projects:
+                - project-compare-type: PLAIN
+                  project-pattern: beah
+                  branches:
+                    - branch-compare-type: ANT
+                      branch-pattern: "**"
+            trigger-on:
+                - comment-added-event:
+                    approval-category: Ready-for-Checks
+                    approval-value: 1
+            custom-url: "https://beaker-project.org/jenkins-results/$JOB_NAME/$BUILD_NUMBER/"
+            escape-quotes: false
+            silent-start: true
+            skip-vote:
+                failed: "{ignorefail}"
+    builders:
+        - restraint-build-rpms:
+            dist: "{dist}"
+            kojitarget: "{kojitarget}"
+    publishers:
+        - archive:
+            artifacts: koji-result/**
+    wrappers:
+        - credentials-binding:
+            - file:
+                credential-id: "1fc5282d-0e61-4736-ace4-9ff23b065636"
+                variable: JENKINS_KEYTAB
+        - publish-over-ssh-post-build:
+            site: "beaker-project.org jenkins-results"
+            # Not saving the RPMs because they are too big.
+            # After https://bugzilla.redhat.com/show_bug.cgi?id=1559638 is done they should be smaller,
+            # consider adding them then.
+            source: "koji-result/**/*.log"
+            target: "$JOB_NAME/$BUILD_NUMBER"
+
+- project:
+    name: beah-review-checks-rpms
+    distro: !include: beah-rpms-distroconfig.yaml.inc
+    jobs:
+        - beah-review-checks-rpms-{distro}
