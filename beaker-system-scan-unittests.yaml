@@ -21,6 +21,7 @@
     builders:
         - beaker-system-scan-run-tests
     publishers:
+        - report-failures
         - archive:
             artifacts: "make.out,tests.out"
         - junit:

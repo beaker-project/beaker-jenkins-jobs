@@ -30,6 +30,7 @@
             dist: "{dist}"
             kojitarget: "{kojitarget}"
     publishers:
+        - report-failures
         - archive:
             artifacts: koji-result/**
         - ssh:

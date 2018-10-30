@@ -61,5 +61,7 @@
             rsync -v -r -l --checksum --delete-after --exclude=.git\* --exclude=dev --exclude=docs --exclude=docs-\* --exclude=yum-archive ./ jenkins@beaker-project.org:/srv/www/beaker-project.org/htdocs/
             ssh jenkins@beaker-project.org /srv/www/beaker-project.org/published.sh "Automatic\ commit\ by\ Jenkins\ job\ ${JOB_NAME}\ \#${BUILD_NUMBER}"
         - critical-block-end
+    publishers:
+        - report-failures
     notifications:
         - notify-matrix-bot

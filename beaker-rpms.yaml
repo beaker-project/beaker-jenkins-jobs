@@ -47,6 +47,7 @@
         - inject:
             properties-file: env.properties
     publishers:
+        - report-failures
         - archive:
             artifacts: koji-result/**
         - ssh:

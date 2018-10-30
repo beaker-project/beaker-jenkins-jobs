@@ -46,5 +46,7 @@
             cd beaker
             ../beaker-administrivia/checkbugs.py
 
+    publishers:
+        - report-failures
     notifications:
         - notify-matrix-bot

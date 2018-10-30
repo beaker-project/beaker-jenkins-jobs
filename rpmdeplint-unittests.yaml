@@ -19,6 +19,7 @@
         - rpmdeplint-run-tests:
             has_python3: "{has_python3}"
     publishers:
+        - report-failures
         - archive:
             artifacts: tests.out
         - junit:

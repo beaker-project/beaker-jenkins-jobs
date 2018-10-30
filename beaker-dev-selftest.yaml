@@ -22,6 +22,7 @@
             wipe-workspace: false
             skip-tag: true
     publishers:
+        - report-failures
         - archive:
             artifacts: beaker/**
     builders:
