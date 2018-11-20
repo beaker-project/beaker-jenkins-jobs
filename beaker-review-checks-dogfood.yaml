@@ -42,12 +42,14 @@
                     <recipe ks_meta="harness=restraint-rhts method=http selinux=--disabled !install_task_requires" whiteboard="Nose Tests">
                         <repos>
                             {extrarepos}
+
                             <repo name="beaker-project-server" url="https://beaker-project.org/yum/server-testing/{distro}/" />
                             <repo name="beaker-gitbuild" url="https://beaker-project.org/jenkins-results/beaker-review-checks-rpms-{distro}/$RPM_BUILD_NUMBER/koji-result/" />
                             <!-- harness repo is needed so that rhts-test-env and rhts-python versions match -->
                             <repo name="beaker-project-harness" url="https://beaker-project.org/yum/harness-testing/{distro}/" />
+
                             <!-- for beaker-server-redhat -->
-                            <repo name="beaker-server-redhat" url="http://file.bos.redhat.com/~dcallagh/beaker-server-redhat/{distro}/" />
+                            <repo name="beaker-server-redhat" url="http://beaker-devel.app.eng.bos.redhat.com/beaker-server-redhat/{distro}/" />
                         </repos>
                         <packages>
                             <package name="-prelink" />
