@@ -2,8 +2,9 @@
     name: beaker-in-a-box-tests-{distro}
     description: |
         Runs Beaker-in-a-box ansible playbook inside Beaker, for patches merged to master.
-    logrotate:
-        daysToKeep: 30
+    properties:
+        - build-discarder:
+            days-to-keep: 30
     concurrent: true
     node: fedora
     scm:

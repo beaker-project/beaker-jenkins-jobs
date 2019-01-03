@@ -2,7 +2,7 @@
     name: report-failures
     publishers:
         - email:
-            recipients: developers@beaker-project.org
+            recipients: beaker-dev-list@redhat.com
 - notification:
     name: notify-matrix-bot
     notifications:

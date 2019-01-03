@@ -6,8 +6,8 @@
     properties:
         - priority-sorter:
               priority: 50
-    logrotate:
-        numToKeep: 30
+        - build-discarder:
+            num-to-keep: 30
     node: fedora
     scm:
         - git:

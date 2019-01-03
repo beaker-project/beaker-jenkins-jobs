@@ -2,8 +2,9 @@
     name: rpmdeplint-review-checks-rpms-{distro}
     description: |
         Builds RPMs for patches posted to Gerrit.
-    logrotate:
-        daysToKeep: 30
+    properties:
+        - build-discarder:
+            days-to-keep: 30
     concurrent: true
     node: fedora
     scm: !include: rpmdeplint-review-checks-scmconfig.yaml.inc

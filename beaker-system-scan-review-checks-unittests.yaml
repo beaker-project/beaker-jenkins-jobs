@@ -2,8 +2,9 @@
     name: beaker-system-scan-review-checks-unittests
     description: |
         Runs beaker-system-scan unit tests for patches posted to Gerrit.
-    logrotate:
-        daysToKeep: 30
+    properties:
+        - build-discarder:
+            days-to-keep: 30
     concurrent: true
     node: fedora
     scm: !include: beaker-system-scan-review-checks-scmconfig.yaml.inc

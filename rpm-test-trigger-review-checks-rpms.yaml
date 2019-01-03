@@ -2,12 +2,13 @@
     name: rpm-test-trigger-review-checks-rpms-{distro}
     description: |
         Builds RPMs for patches posted to Gerrit.
-    logrotate:
-        daysToKeep: 30
+    properties:
+        - build-discarder:
+            days-to-keep: 30
     concurrent: true
     node: fedora
-    scm: !include rpm-test-trigger-review-checks-scmconfig.yaml.inc
-    triggers: !include rpm-test-trigger-review-checks-triggerconfig.yaml.inc
+    scm: !include: rpm-test-trigger-review-checks-scmconfig.yaml.inc
+    triggers: !include: rpm-test-trigger-review-checks-triggerconfig.yaml.inc
     builders:
         - shell: |
             ./rpmbuild.sh -bs

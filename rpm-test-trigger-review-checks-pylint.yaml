@@ -2,8 +2,9 @@
     name: rpm-test-trigger-review-checks-pylint
     description: |
         Runs pylint on patches posted to Gerrit.
-    logrotate:
-        daysToKeep: 30
+    properties:
+        - build-discarder:
+            days-to-keep: 30
     concurrent: true
     node: fedora
     scm: !include: rpm-test-trigger-review-checks-scmconfig.yaml.inc

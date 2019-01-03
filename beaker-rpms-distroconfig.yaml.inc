@@ -1,8 +1,12 @@
 # RCM has not created this yet: https://projects.engineering.redhat.com/browse/RCM-38028
 #- Fedorarawhide:
-#    dist: .fc29
-#    kojitarget: eng-fedora-rawhide-candidate
+#    dist: .fc30
+#    kojitarget: eng-fedora-30-candidate
 #    ignorefail: "1"
+- Fedora29:
+    dist: .fc29
+    kojitarget: eng-fedora-29-candidate
+    ignorefail: ""
 - Fedora28:
     dist: .fc28
     kojitarget: eng-fedora-28-candidate

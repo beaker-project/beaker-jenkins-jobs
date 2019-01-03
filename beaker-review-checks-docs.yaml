@@ -2,8 +2,9 @@
     name: beaker-review-checks-docs
     description: |
         Builds Sphinx documentation for patches posted to Gerrit.
-    logrotate:
-        daysToKeep: 30
+    properties:
+        - build-discarder:
+            days-to-keep: 30
     concurrent: true
     node: fedora
     scm: !include: beaker-review-checks-scmconfig.yaml.inc

@@ -2,8 +2,9 @@
     name: beaker-system-scan-unittests
     description: |
         Runs beaker-system-scan unit tests for the master branch.
-    logrotate:
-        numToKeep: 30
+    properties:
+        - build-discarder:
+            num-to-keep: 30
     concurrent: true
     node: fedora
     scm:
