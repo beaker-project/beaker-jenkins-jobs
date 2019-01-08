@@ -38,9 +38,6 @@
             make
             LSHW=../lshw/src/lshw ./run-tests.sh
 
-    notifications:
-        - notify-matrix-bot
-
 - job:
     name: lshw-tests-beaker-fork
     description: |
@@ -83,5 +80,3 @@
 
     publishers:
         - report-failures
-    notifications:
-        - notify-matrix-bot

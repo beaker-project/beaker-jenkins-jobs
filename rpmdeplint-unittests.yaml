@@ -24,8 +24,6 @@
             artifacts: tests.out
         - junit:
             results: junit-*.xml
-    notifications:
-        - notify-matrix-bot
 
 - project:
     name: rpmdeplint-unittests

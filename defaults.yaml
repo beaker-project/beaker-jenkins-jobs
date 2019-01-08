@@ -3,9 +3,3 @@
     publishers:
         - email:
             recipients: beaker-dev-list@redhat.com
-- notification:
-    name: notify-matrix-bot
-    notifications:
-        - http:
-            url: https://matrix.djc.id.au/neb/jenkins
-            event: finalized

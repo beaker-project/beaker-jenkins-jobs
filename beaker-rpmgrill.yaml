@@ -23,5 +23,3 @@
             bash -c "jq '.tests[].results | length > 0 | select(. == true)' mock-result/unpacked/rpmgrill.json -e; if [ \"\$?\" == 4 ]; then exit 0; else exit 1; fi"
     publishers:
         - report-failures
-    notifications:
-        - notify-matrix-bot

@@ -39,8 +39,6 @@
             remove-prefix: koji-result/
             target: "harness/{distro}/"
             command: "createrepo_c --update --no-database /srv/www/nightlies/harness/{distro}/"
-    notifications:
-        - notify-matrix-bot
 
 - project:
     name: restraint-rpms

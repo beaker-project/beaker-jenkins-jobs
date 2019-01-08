@@ -56,8 +56,6 @@
             remove-prefix: koji-result/
             target: "${{GIT_BRANCH_NAME}}/{distro}/"
             command: "createrepo_c --update --no-database /srv/www/nightlies/${{GIT_BRANCH_NAME}}/{distro}/"
-    notifications:
-        - notify-matrix-bot
 
 - project:
     name: beaker-rpms

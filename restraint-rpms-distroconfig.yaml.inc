@@ -1,15 +1,16 @@
-# RCM has not created this yet: https://projects.engineering.redhat.com/browse/RCM-38028
-#- Fedorarawhide:
-#    dist: .fc30
-#    kojitarget: beaker-harness-fedora-rawhide
-#    ignorefail: "1"
+- Fedorarawhide:
+    # Note that this is only current target and will be changed in the feature.
+    # After release of F30 it is necessary to create new koji target
+    dist: .fc30
+    kojitarget: eng-fedora-30-candidate
+    ignorefail: "1"
+- Fedora29:
+    dist: .fc29
+    kojitarget: eng-fedora-29-candidate
+    ignorefail: ""
 - Fedora28:
     dist: .fc28
     kojitarget: eng-fedora-28-candidate
-    ignorefail: ""
-- Fedora27:
-    dist: .fc27
-    kojitarget: eng-fedora-27-candidate
     ignorefail: ""
 - RedHatEnterpriseLinux8:
     dist: .el8

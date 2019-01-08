@@ -61,5 +61,3 @@
         - report-failures
         - archive:
             artifacts: beaker-dev-docs/_build/html/**
-    notifications:
-        - notify-matrix-bot
