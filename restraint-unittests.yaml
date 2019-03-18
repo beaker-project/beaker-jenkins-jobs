@@ -22,6 +22,7 @@
         - shell: |
             : ${XDG_RUNTIME_DIR:=/run/user/$(id -u)}
             unset http_proxy
-            flock $XDG_RUNTIME_DIR/restraint-tests-flock make check
+            export PKG_CONFIG_PATH=../third-party/tree/lib/pkgconfig
+            flock $XDG_RUNTIME_DIR/restraint-tests-flock make check STATIC=1
     publishers:
         - report-failures

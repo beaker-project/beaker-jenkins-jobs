@@ -5,3 +5,4 @@
             # Hack to pull tarballs from dist-git, instead of from the internet
             cd third-party
             curl -fsS 'http://pkgs.devel.redhat.com/cgit/rpms/restraint/plain/sources?h=eng-rhel-6' | while read hash filename ; do curl -fsSLO http://pkgs.devel.redhat.com/repo/pkgs/restraint/$filename/$hash/$filename ; done
+            make
