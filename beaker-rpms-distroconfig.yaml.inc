@@ -1,7 +1,11 @@
 - Fedorarawhide:
+    dist: .fc31
+    kojitarget: eng-fedora-31-candidate
+    ignorefail: "1"
+- Fedora30:
     dist: .fc30
     kojitarget: eng-fedora-30-candidate
-    ignorefail: "1"
+    ignorefail: ""
 - Fedora29:
     dist: .fc29
     kojitarget: eng-fedora-29-candidate
@@ -10,10 +14,11 @@
     dist: .fc28
     kojitarget: eng-fedora-28-candidate
     ignorefail: ""
-- Fedora27:
-    dist: .fc27
-    kojitarget: eng-fedora-27-candidate
-    ignorefail: ""
+# Kojitarget for RHEL8 is not created yet
+#- RedHatEnterpriseLinux8:
+#    dist: .el8bkr
+#    kojitarget: beaker-server-rhel-8-candidate
+#    ignorefail: ""
 - RedHatEnterpriseLinux7:
     dist: .el7bkr
     kojitarget: beaker-server-rhel-7-candidate
