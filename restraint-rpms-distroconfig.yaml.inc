@@ -1,6 +1,10 @@
 - Fedorarawhide:
     # Note that this is only current target and will be changed in the feature.
-    # After release of F30 it is necessary to create new koji target
+    # After release of F31 it is necessary to create new koji target
+    dist: .fc31
+    kojitarget: eng-fedora-31-candidate
+    ignorefail: ""
+- Fedora30:
     dist: .fc30
     kojitarget: eng-fedora-30-candidate
     ignorefail: ""
@@ -27,8 +31,4 @@
 - RedHatEnterpriseLinux5:
     dist: .el5bkr
     kojitarget: beaker-harness-rhel-5-candidate
-    ignorefail: ""
-- RedHatEnterpriseLinux4:
-    dist: .el4bkr
-    kojitarget: beaker-harness-rhel-4-candidate
     ignorefail: ""
