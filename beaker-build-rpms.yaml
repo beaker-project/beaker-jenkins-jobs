@@ -3,7 +3,7 @@
     builders:
     - shell: |
         rm -rf rpmbuild-output/ koji-result/
-        if [[ "$GIT_BRANCH" == "origin/develop" ]] ; then
+        if [[ "$GIT_BRANCH" == "gerrit/develop" ]] ; then
             Misc/rpmbuild.sh --next-major -bs --define dist\ {dist}
         else
             Misc/rpmbuild.sh -bs --define dist\ {dist}
