@@ -14,11 +14,10 @@
     dist: .fc28
     kojitarget: eng-fedora-28-candidate
     ignorefail: ""
-# Kojitarget for RHEL8 is not created yet
-#- RedHatEnterpriseLinux8:
-#    dist: .el8bkr
-#    kojitarget: beaker-server-rhel-8-candidate
-#    ignorefail: ""
+- RedHatEnterpriseLinux8:
+    dist: .el8bkr
+    kojitarget: beaker-server-rhel-8-candidate
+    ignorefail: ""
 - RedHatEnterpriseLinux7:
     dist: .el7bkr
     kojitarget: beaker-server-rhel-7-candidate
