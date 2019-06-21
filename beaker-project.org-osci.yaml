@@ -1,0 +1,61 @@
+- job:
+    name: beaker-project.org-osci
+    description: |
+        Builds all non-Sphinx web site content from
+        https://git.beaker-project.org/cgit/beaker-project.org/
+        (some static files, release tarballs, and yum repos)
+        and publishes it to https://beaker-project.org/.
+    auth-token: !include: beaker-project.org-auth-token.txt
+    properties:
+        - priority-sorter:
+            priority: 150
+    node: fedora
+    scm:
+        - git:
+            url: git://git.beaker-project.org/beaker-project.org
+            branches:
+                - origin/master
+            basedir: beaker-project.org
+            # no clean because we don't want to fetch tarballs and RPMs every time!
+            wipe-workspace: false
+            skip-tag: true
+            reference-repo: /var/lib/jenkins/gitreference/beaker-project.org
+        - git:
+            url: git://git.beaker-project.org/beaker
+            branches:
+                - origin/master
+            basedir: beaker
+            clean:
+                before: true
+            wipe-workspace: false
+            skip-tag: true
+            reference-repo: /var/lib/jenkins/gitreference/beaker
+    triggers:
+        - pollscm:
+            cron: "H/5 * * * *"
+        - ci-trigger:
+            override-topic: "Consumer.rh-jenkins-ci-plugin.f56fda0c-8f45-4964-873a-729a8bdf9256.VirtualTopic.eng.brew.build.>"
+            jms-selector: "type IN ('Tag', 'Untag') AND (tag LIKE 'beaker-%' OR tag LIKE 'eng-fedora-%')"
+    wrappers:
+        - ssh-agent-credentials:
+            users:
+                - '8f6d9af6-2faf-451a-86f5-ad433b0f9e9a'
+    builders:
+        - shell: |
+            {
+                if [ -n "$CI_MESSAGE" ] ; then
+                    echo "Triggered by CI message: $CI_MESSAGE"
+                fi
+            } 2>/dev/null
+
+            cd beaker-project.org/
+            make clean
+            make
+
+        - critical-block-start
+        - shell: |
+            cd beaker-project.org/
+            rsync -v -r -l --checksum --delete-after --exclude=.git\* --exclude=dev --exclude=docs --exclude=docs-\* --exclude=yum-archive ./ beaker-web-uploader@beaker-project.osci.io:/var/www/www.beaker-project.org/
+        - critical-block-end
+    publishers:
+        - report-failures
