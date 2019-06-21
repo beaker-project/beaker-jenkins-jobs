@@ -1,0 +1,59 @@
+- job:
+    name: beaker-dev-docs-osci
+    description: |
+        Builds the HTML developer docs from
+        https://git.beaker-project.org/cgit/beaker-dev-docs/
+        with the beaker-project.org Sphinx theme applied, and publishes them under
+        https://beaker-project.org/dev/.
+    node: fedora
+    scm:
+        - git:
+            url: git://git.beaker-project.org/beaker-project.org
+            branches:
+                - origin/master
+            basedir: beaker-project.org
+            clean:
+                before: true
+            wipe-workspace: false
+            skip-tag: true
+            included-regions:
+                - "sphinx-theme/.*"
+            sparse-checkout:
+                paths:
+                    - "sphinx-theme"
+            reference-repo: /var/lib/jenkins/gitreference/beaker-project.org
+        - git:
+            url: git://git.beaker-project.org/beaker-dev-docs
+            branches:
+                - origin/master
+            basedir: beaker-dev-docs
+            clean:
+                before: true
+            wipe-workspace: false
+            skip-tag: true
+    triggers:
+        - pollscm:
+            cron: "H/5 * * * *"
+    wrappers:
+        - ssh-agent-credentials:
+            users:
+                - '8f6d9af6-2faf-451a-86f5-ad433b0f9e9a'
+    builders:
+        - shell: |
+            cd beaker-dev-docs/
+
+            # In Sphinx 1.3 this can become -D html_theme_path=...
+            echo "html_theme_path = ['../beaker-project.org/sphinx-theme']" >>conf.py
+
+            sphinx-build -W -b html -D html_theme=beaker . _build/html
+            rm -r _build/html/.doctrees
+
+        - critical-block-start
+        - shell: |
+            cd beaker-dev-docs/
+            rsync -v -r -l --checksum --delete-after _build/html/ beaker-web-uploader@beaker-project.osci.io:/var/www/www.beaker-project.org/dev/
+        - critical-block-end
+    publishers:
+        - report-failures
+        - archive:
+            artifacts: beaker-dev-docs/_build/html/**
