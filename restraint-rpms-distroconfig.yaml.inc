@@ -12,10 +12,6 @@
     dist: .fc29
     kojitarget: eng-fedora-29-candidate
     ignorefail: ""
-- Fedora28:
-    dist: .fc28
-    kojitarget: eng-fedora-28-candidate
-    ignorefail: ""
 - RedHatEnterpriseLinux8:
     dist: .el8bkr
     kojitarget: beaker-harness-rhel-8-candidate
