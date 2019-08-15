@@ -55,7 +55,7 @@
         - critical-block-start
         - shell: |
             cd beaker-project.org/
-            rsync -v -r -l --checksum --delete-after --exclude=.git\* --exclude=dev --exclude=docs --exclude=docs-\* --exclude=yum-archive ./ beaker-web-uploader@beaker-project.osci.io:/var/www/www.beaker-project.org/
+            rsync -p -v -r -l --checksum --delete-after --exclude=.git\* --exclude=dev --exclude=docs --exclude=docs-\* --exclude=yum-archive ./ beaker-web-uploader@beaker-project.osci.io:/var/www/www.beaker-project.org/
         - critical-block-end
     publishers:
         - report-failures
