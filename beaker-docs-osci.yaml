@@ -1,0 +1,125 @@
+
+# Note that this is a templated job, with one instance for every branch. The 
+# list of all branches at the bottom of this file must be updated every time 
+# a new branch is created!
+
+- job-template:
+    name: beaker-docs-{branch}-osci
+    description: |
+        Builds the HTML docs from documentation/ in Beaker's source tree, with 
+        the beaker-project.org Sphinx theme applied, and publishes them under 
+        https://beaker-project.org/docs/ (for master) or 
+        https://beaker-project.org/docs-<branch>/ (for all other branches).
+    properties:
+        - priority-sorter:
+            priority: 120
+          # We don't need to keep built docs in Jenkins permanently since all
+          # changes to the web site are tracked in git on beaker-project.org,
+          # including every docs build that is published.
+        - build-discarder:
+            num-to-keep: 30
+    node: fedora
+    scm:
+        - git:
+            url: git://git.beaker-project.org/beaker-project.org
+            branches:
+                - origin/master
+            basedir: beaker-project.org
+            clean:
+                before: true
+            wipe-workspace: false
+            skip-tag: true
+            included-regions:
+                - "sphinx-theme/.*"
+            sparse-checkout:
+                paths:
+                    - "sphinx-theme"
+            reference-repo: /var/lib/jenkins/gitreference/beaker-project.org
+        - git:
+            url: git://git.beaker-project.org/beaker
+            branches:
+                - origin/{branch}
+            basedir: beaker
+            clean:
+                before: true
+            wipe-workspace: false
+            skip-tag: true
+            reference-repo: /var/lib/jenkins/gitreference/beaker
+    triggers:
+        - pollscm:
+            cron: "H/5 * * * *"
+    wrappers:
+        - exclusion:
+            resources:
+                - htdocs
+        - ssh-agent-credentials:
+            users:
+                - '8f6d9af6-2faf-451a-86f5-ad433b0f9e9a'
+    builders:
+        - shell: |
+            cd beaker/
+
+            case "{branch}" in
+                master)
+                    branch_warning=""
+                    ;;
+                develop)
+                    branch_warning="You are viewing the development version of Beaker’s documentation. It is not final and may be changed before the next release."
+                    ;;
+                *)
+                    branch_warning="You are viewing a branched version of Beaker’s documentation. The latest released version of the documentation contains more up-to-date information."
+                    ;;
+            esac
+
+            # Only for old branches
+            make -C Common bkr/__init__.py bkr/common/__init__.py
+
+            # In Sphinx 1.3 this can become -D html_theme_path=...
+            echo "html_theme_path = ['../../beaker-project.org/sphinx-theme']" >>documentation/conf.py
+
+            PYTHONPATH=Common:Server:Client/src python -c '__requires__ = ["CherryPy < 3.0"]; import pkg_resources; execfile("/usr/bin/sphinx-build")' \
+                -b html -D html_theme=beaker -A branch_warning="$branch_warning" documentation documentation/_build/html
+
+            PYTHONPATH=Common:Server:Client/src python -c '__requires__ = ["CherryPy < 3.0"]; import pkg_resources; execfile("/usr/bin/sphinx-build")' \
+                -b latex documentation documentation/_build/latex
+            make -C documentation/_build/latex all-pdf
+
+            mkdir documentation/tree
+            cp -r documentation/_build/html/* documentation/tree/
+            cp documentation/_build/latex/*.pdf documentation/tree/
+
+        - critical-block-start
+        - shell: |
+            cd beaker/
+            destdir=docs
+            if [[ "{branch}" != master ]] ; then destdir="docs-{branch}" ; fi
+            rsync -p -v -r -l --checksum --delete-after documentation/tree/ "beaker-web-uploader@beaker-project.osci.io:/var/www/www.beaker-project.org/$destdir/" 
+        - critical-block-end
+    publishers:
+        - report-failures
+        - archive:
+            artifacts: beaker/documentation/_build/html/**
+
+- project:
+    name: beaker-docs
+    branch:
+        - master
+        - develop
+        - release-0.11
+        - release-0.12
+        - release-0.13
+        - release-0.14
+        - release-0.15
+        - release-0.16
+        - release-0.17
+        - release-0.18
+        - release-19
+        - release-20
+        - release-21
+        - release-22
+        - release-23
+        - release-24
+        - release-25
+        - release-26
+    jobs:
+        - "beaker-docs-{branch}"
