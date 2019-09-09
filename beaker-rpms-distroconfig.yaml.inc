@@ -1,7 +1,14 @@
-- Fedorarawhide:
-    dist: .fc31
-    kojitarget: eng-fedora-31-candidate
-    ignorefail: "1"
+# Fedora31+ builds are blocked by zstd - RHELPLAN-25830
+# Blocked by RCM-65478
+#- Fedorarawhide:
+#    dist: .fc32
+#    kojitarget: eng-fedora-32-candidate
+#    ignorefail: "1"
+# Blocked by RCM-65479
+#- Fedora31:
+#    dist: .fc31
+#    kojitarget: eng-fedora-31-candidate
+#    ignorefail: ""
 - Fedora30:
     dist: .fc30
     kojitarget: eng-fedora-30-candidate
